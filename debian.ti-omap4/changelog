@@ -1,3 +1,11 @@
+linux-ti-omap4 (3.3.0-1479.3) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * Rob's kernel into a package
+
+ -- Xavier Boudet <x-boudet@ti.com>  Mon, 20 Feb 2012 14:11:10 +0100
+
 linux-ti-omap4 (3.2.0-1406.8) precise; urgency=low
 
   [ Paolo Pisati ]
