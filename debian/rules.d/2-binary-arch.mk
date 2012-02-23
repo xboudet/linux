@@ -232,6 +232,10 @@ endif
 		$(pkgdir)/lib/modules/$(abi_release)-$*
 	rmdir $(pkgdir)/lib/modules/$(abi_release)-$*/_
 
+	# Time for dirty temporary hack:
+	cp -a $(CURDIR)/drivers/staging/omapdrm/omap_drv.h $(hdrdir)/include/linux
+	cp -a $(CURDIR)/drivers/staging/omapdrm/omap_drm.h $(hdrdir)/include/linux
+
 headers_tmp := $(CURDIR)/debian/tmp-headers
 headers_dir := $(CURDIR)/debian/linux-libc-dev
 
