@@ -594,6 +594,9 @@ int omap_gem_mmap_obj(struct drm_gem_object *obj,
 		vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
 	}
 
+	if (omap_obj->ops && omap_obj->ops->mmap) {
+		omap_obj->ops->mmap(obj->filp, vma);
+	}
 	return 0;
 }
 
