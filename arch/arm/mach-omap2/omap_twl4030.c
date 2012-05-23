@@ -30,6 +30,7 @@
 #define OMAP3_VP_VSTEPMAX_VSTEPMAX	0x04
 #define OMAP3_VP_VLIMITTO_TIMEOUT_US	200
 
+#define OMAP4_VP_CORE_VSTEPMAX_VSTEPMAX	0x04
 #define OMAP4_SRI2C_SLAVE_ADDR		0x12
 #define OMAP4_VDD_MPU_SR_VOLT_REG	0x55
 #define OMAP4_VDD_MPU_SR_CMD_REG	0x56
@@ -217,7 +218,7 @@ static struct omap_voltdm_pmic omap443x_core_pmic = {
 	.switch_on_time		= 549,
 	.vp_erroroffset		= OMAP4_VP_CONFIG_ERROROFFSET,
 	.vp_vstepmin		= OMAP4_VP_VSTEPMIN_VSTEPMIN,
-	.vp_vstepmax		= OMAP4_VP_VSTEPMAX_VSTEPMAX,
+	.vp_vstepmax		= OMAP4_VP_CORE_VSTEPMAX_VSTEPMAX,
 	.vp_vddmin		= OMAP4_VP_CORE_VLIMITTO_VDDMIN,
 	.vp_vddmax		= OMAP4_VP_CORE_VLIMITTO_VDDMAX,
 	.vp_timeout_us		= OMAP4_VP_VLIMITTO_TIMEOUT_US,
@@ -258,6 +259,12 @@ int __init omap_twl4030_init(void)
 		omap3_mpu_pmic.vp_vddmax = OMAP3630_VP1_VLIMITTO_VDDMAX;
 		omap3_core_pmic.vp_vddmin = OMAP3630_VP2_VLIMITTO_VDDMIN;
 		omap3_core_pmic.vp_vddmax = OMAP3630_VP2_VLIMITTO_VDDMAX;
+	}
+
+	if (cpu_is_omap446x()) {
+		/* use SMPS1  for CORE instead of SMPS3 on 4430 */
+		omap_twl_map[1].pmic_data->volt_reg_addr = OMAP4_VDD_MPU_SR_VOLT_REG;
+		omap_twl_map[1].pmic_data->cmd_reg_addr = OMAP4_VDD_MPU_SR_CMD_REG;
 	}
 
 	if (cpu_is_omap443x())
