@@ -334,9 +334,10 @@ static int _suspend(struct rproc *rproc, bool auto_suspend)
 	struct platform_device *pdev = to_platform_device(dev);
 	struct omap_rproc_pdata *pdata = dev->platform_data;
 	struct omap_rproc *oproc = rproc->priv;
+	struct omap_rproc_timers_info *timers = pdata->timers;
 	unsigned long to = msecs_to_jiffies(oproc->suspend_timeout);
 	unsigned long ta = jiffies + to;
-	int ret;
+	int ret, i;
 
 	init_completion(&oproc->pm_comp);
 	oproc->suspend_acked = false;
@@ -366,6 +367,9 @@ static int _suspend(struct rproc *rproc, bool auto_suspend)
 	ret = pdata->device_shutdown(pdev);
 	if (ret)
 		return ret;
+
+	for (i = 0; i < pdata->timers_cnt; i++)
+		omap_dm_timer_stop(timers[i].odt);
 
 	oproc->suspended = true;
 
@@ -399,6 +403,8 @@ static int omap_rproc_resume(struct rproc *rproc)
 	struct platform_device *pdev = to_platform_device(dev);
 	struct omap_rproc_pdata *pdata = dev->platform_data;
 	struct omap_rproc *oproc = rproc->priv;
+	struct omap_rproc_timers_info *timers = pdata->timers;
+	int ret, i;
 
 	oproc->suspended = false;
 
@@ -417,7 +423,15 @@ static int omap_rproc_resume(struct rproc *rproc)
 		oproc->need_kick = false;
 	}
 
-	return pdata->device_enable(pdev);
+	for (i = 0; i < pdata->timers_cnt; i++)
+		omap_dm_timer_start(timers[i].odt);
+
+	ret = pdata->device_enable(pdev);
+	if (ret)
+		for (i = 0; i < pdata->timers_cnt; i++)
+			omap_dm_timer_stop(timers[i].odt);
+
+	return ret;
 }
 
 static struct rproc_ops omap_rproc_ops = {
