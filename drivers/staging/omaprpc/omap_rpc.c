@@ -49,11 +49,78 @@ static spinlock_t omaprpc_services_lock =
 static struct list_head omaprpc_services_list =
 	LIST_HEAD_INIT(omaprpc_services_list);
 
-#if defined(OMAPRPC_PERF_MEASUREMENT)
 static struct timeval start_time;
 static struct timeval end_time;
 static long usec_elapsed;
-#endif
+
+unsigned int omaprpc_debug = 0;
+EXPORT_SYMBOL(omaprpc_debug);
+MODULE_PARM_DESC(debug, "Used to enable debug message");
+module_param_named(debug, omaprpc_debug, int, 0600);
+
+static void omaprpc_print_msg(struct omaprpc_instance_t *rpc,
+			      char *prefix,
+			      char buffer[512])
+{
+	u32 sp = 0, p = 0;
+	struct omaprpc_msg_header_t *hdr =(struct omaprpc_msg_header_t *)buffer;
+	struct omaprpc_instance_handle_t *hdl = NULL;
+	struct omaprpc_instance_info_t *info = NULL;
+	struct omaprpc_packet_t *packet = NULL;
+	struct omaprpc_parameter_t *param = NULL;
+	OMAPRPC_PRINT(OMAPRPC_ZONE_VERBOSE, rpc->rpcserv->dev,
+		"%s HDR: type %d flags: %d len: %d\n",
+		prefix,
+		hdr->msg_type,
+		hdr->msg_flags,
+		hdr->msg_len);
+	switch (hdr->msg_type) {
+	case OMAPRPC_MSG_INSTANCE_CREATED:
+	case OMAPRPC_MSG_INSTANCE_DESTROYED:
+		hdl = OMAPRPC_PAYLOAD(buffer, omaprpc_instance_handle_t);
+		OMAPRPC_PRINT(OMAPRPC_ZONE_VERBOSE,
+			rpc->rpcserv->dev,
+			"%s endpoint:%d status:%d\n",
+			prefix,
+			hdl->endpoint_address,
+			hdl->status);
+		break;
+	case OMAPRPC_MSG_INSTANCE_INFO:
+		info = OMAPRPC_PAYLOAD(buffer, omaprpc_instance_info_t);
+		OMAPRPC_PRINT(OMAPRPC_ZONE_VERBOSE,
+			rpc->rpcserv->dev,
+			"%s (info not yet implemented)\n",prefix);
+		break;
+	case OMAPRPC_MSG_CALL_FUNCTION:
+		packet = OMAPRPC_PAYLOAD(buffer, omaprpc_packet_t);
+		OMAPRPC_PRINT(OMAPRPC_ZONE_VERBOSE,
+			rpc->rpcserv->dev,
+			"%s PACKET: desc:%04x msg_id:%04x pool_id:%04x"
+			" job_id:%04x func:0x%08x result:%d size:%u\n",
+			prefix,
+			packet->desc,
+			packet->msg_id,
+			packet->pool_id,
+			packet->job_id,
+			packet->fxn_idx,
+			packet->result,
+			packet->data_size);
+		sp = sizeof(struct omaprpc_parameter_t);
+		param = (struct omaprpc_parameter_t *)packet->data;
+		for (p = 0; p < (packet->data_size / sp); p++) {
+			OMAPRPC_PRINT(OMAPRPC_ZONE_VERBOSE,
+				rpc->rpcserv->dev,
+				"%s PARAM[%u] size:%zu data:%zu (0x%08x)",
+				prefix,p,
+				param[p].size,
+				param[p].data,
+				param[p].data);
+		}
+		break;
+	default:
+		break;
+	}
+}
 
 static void omaprpc_fxn_del(struct omaprpc_instance_t *rpc)
 {
@@ -80,7 +147,7 @@ static struct omaprpc_call_function_t *omaprpc_fxn_get(
 
 	mutex_lock(&rpc->lock);
 	list_for_each_entry_safe(pos, n, &rpc->fxn_list, list) {
-		OMAPRPC_INFO(rpc->rpcserv->dev,
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 			"Looking for msg %u, found msg %u\n",
 			msgId, pos->msgId);
 		if (pos->msgId == msgId) {
@@ -108,7 +175,7 @@ static int omaprpc_fxn_add(struct omaprpc_instance_t *rpc,
 		mutex_lock(&rpc->lock);
 		list_add(&fxn->list, &rpc->fxn_list);
 		mutex_unlock(&rpc->lock);
-		OMAPRPC_INFO(rpc->rpcserv->dev,
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 			"Added msg id %u to list", msgId);
 	} else {
 		OMAPRPC_ERR(rpc->rpcserv->dev,
@@ -134,13 +201,16 @@ static void omaprpc_cb(struct rpmsg_channel *rpdev,
 	char *skbdata;
 	u32 expected = 0;
 
-	OMAPRPC_INFO(rpc->rpcserv->dev,
-		"OMAPRPC: incoming msg src %d len %d msg_type %d msg_len %d\n",
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
+		"OMAPRPC: <== incoming msg src %d len %d msg_type %d msg_len %d\n",
 		src, len, hdr->msg_type, hdr->msg_len);
-#if defined(OMAPRPC_VERY_VERBOSE)
-	print_hex_dump(KERN_DEBUG, "OMAPRPC: RX: ",
-		DUMP_PREFIX_NONE, 16, 1, data, len, true);
-#endif
+
+	if (omaprpc_debug & OMAPRPC_ZONE_VERBOSE) {
+		print_hex_dump(KERN_DEBUG, "OMAPRPC: RX: ",
+			DUMP_PREFIX_NONE, 16, 1, data, len, true);
+		omaprpc_print_msg(rpc, "RX:", buf);
+	}
+
 	expected = sizeof(struct omaprpc_msg_header_t);
 	switch (hdr->msg_type) {
 	case OMAPRPC_MSG_INSTANCE_CREATED:
@@ -170,8 +240,8 @@ static void omaprpc_cb(struct rpmsg_channel *rpdev,
 				hdl->status);
 			rpc->state = OMAPRPC_STATE_FAULT;
 		} else {
-			OMAPRPC_INFO(rpc->rpcserv->dev, "OMAPRPC: "
-				"Created addr %d status %d\n",
+			OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
+				"OMAPRPC: Created addr %d status %d\n",
 				hdl->endpoint_address,
 				hdl->status);
 			/* only save the address if it connected. */
@@ -192,7 +262,7 @@ static void omaprpc_cb(struct rpmsg_channel *rpdev,
 			rpc->state = OMAPRPC_STATE_FAULT;
 			break;
 		}
-		OMAPRPC_INFO(rpc->rpcserv->dev,
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 			"OMAPRPC: endpoint %d disconnected!\n",
 			hdl->endpoint_address);
 		rpc->state = OMAPRPC_STATE_DISCONNECTED;
@@ -206,13 +276,14 @@ static void omaprpc_cb(struct rpmsg_channel *rpdev,
 	case OMAPRPC_MSG_CALL_FUNCTION:
 	case OMAPRPC_MSG_FUNCTION_RETURN:
 
-#if defined(OMAPRPC_PERF_MEASUREMENT)
-		do_gettimeofday(&end_time);
-		usec_elapsed = (end_time.tv_sec - start_time.tv_sec) *
-				1000000 + end_time.tv_usec - start_time.tv_usec;
-		OMAPRPC_INFO(rpc->rpcserv->dev,
-			"write to callback took %lu usec\n", usec_elapsed);
-#endif
+		if (omaprpc_debug & OMAPRPC_ZONE_PERF) {
+			do_gettimeofday(&end_time);
+			usec_elapsed = (end_time.tv_sec - start_time.tv_sec) *
+					1000000 + end_time.tv_usec - start_time.tv_usec;
+			OMAPRPC_PRINT(OMAPRPC_ZONE_PERF, rpc->rpcserv->dev,
+				"write to callback took %lu usec\n", usec_elapsed);
+		}
+
 		skb = alloc_skb(hdr->msg_len, GFP_KERNEL);
 		if (!skb) {
 			OMAPRPC_ERR(rpc->rpcserv->dev,
@@ -223,10 +294,12 @@ static void omaprpc_cb(struct rpmsg_channel *rpdev,
 		memcpy(skbdata, hdr->msg_data, hdr->msg_len);
 
 		mutex_lock(&rpc->lock);
-#if defined(OMAPRPC_PERF_MEASUREMENT)
-		/* capture the time delay between callback and read */
-		do_gettimeofday(&start_time);
-#endif
+
+		if (omaprpc_debug & OMAPRPC_ZONE_PERF) {
+			/* capture the time delay between callback and read */
+			do_gettimeofday(&start_time);
+		}
+
 		skb_queue_tail(&rpc->queue, skb);
 		mutex_unlock(&rpc->lock);
 		/* wake up any blocking processes, waiting for new data */
@@ -307,8 +380,9 @@ static long omaprpc_ioctl(struct file *filp,
 	struct omaprpc_create_instance_t connect;
 	int ret = 0;
 
-	OMAPRPC_INFO(rpcserv->dev, "OMAPRPC: %s: cmd %d, arg 0x%lx\n",
-		     __func__, cmd, arg);
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpcserv->dev,
+		"OMAPRPC: %s: cmd %d, arg 0x%lx\n",
+		__func__, cmd, arg);
 
 	/* if the magic was not present, tell the caller
 	 that we are not a typewritter[sic]! */
@@ -462,7 +536,7 @@ static int omaprpc_open(struct inode *inode, struct file *filp)
 	list_add(&rpc->list, &rpcserv->instance_list);
 	mutex_unlock(&rpcserv->lock);
 
-	OMAPRPC_INFO(rpcserv->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpcserv->dev,
 		"OMAPRPC: local addr assigned: 0x%x\n", rpc->ept->addr);
 
 	return 0;
@@ -485,7 +559,7 @@ static int omaprpc_release(struct inode *inode, struct file *filp)
 	if (rpc == NULL || rpcserv == NULL)
 		return 0;
 
-	OMAPRPC_INFO(rpcserv->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpcserv->dev,
 		"Releasing Instance %p, in state %d\n",
 		rpc, rpc->state);
 	/* if we are in a normal state */
@@ -505,7 +579,7 @@ static int omaprpc_release(struct inode *inode, struct file *filp)
 			handle->status = 0;
 			len = sizeof(struct omaprpc_msg_header_t)+hdr->msg_len;
 
-			OMAPRPC_INFO(rpcserv->dev,
+			OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpcserv->dev,
 				"OMAPRPC: Disconnecting from RPC service at %d\n",
 				rpc->dst);
 
@@ -549,12 +623,12 @@ static int omaprpc_release(struct inode *inode, struct file *filp)
 	list_del(&rpc->list);
 	mutex_unlock(&rpcserv->lock);
 
-	OMAPRPC_INFO(rpcserv->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpcserv->dev,
 		"OMAPRPC: Instance %p has been deleted!\n",
 		rpc);
 
 	if (list_empty(&rpcserv->instance_list)) {
-		OMAPRPC_INFO(rpcserv->dev,
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpcserv->dev,
 			"OMAPRPC: All instances have been removed!\n");
 	}
 
@@ -652,14 +726,14 @@ static ssize_t omaprpc_read(struct file *filp,
 		goto failure;
 	}
 
-#if defined(OMAPRPC_PERF_MEASUREMENT)
-	do_gettimeofday(&end_time);
-	usec_elapsed = (end_time.tv_sec - start_time.tv_sec) *
-			1000000 + end_time.tv_usec - start_time.tv_usec;
-	OMAPRPC_INFO(rpc->rpcserv->dev,
-		"callback to read took %lu usec\n",
-		usec_elapsed);
-#endif
+	if (omaprpc_debug & OMAPRPC_ZONE_PERF) {
+		do_gettimeofday(&end_time);
+		usec_elapsed = (end_time.tv_sec - start_time.tv_sec) *
+				1000000 + end_time.tv_usec - start_time.tv_usec;
+		OMAPRPC_PRINT(OMAPRPC_ZONE_PERF, rpc->rpcserv->dev,
+			"callback to read took %lu usec\n",
+			usec_elapsed);
+	}
 
 	/* unlock the instances */
 	mutex_unlock(&rpc->lock);
@@ -731,7 +805,7 @@ static ssize_t omaprpc_write(struct file *filp,
 		goto failure;
 	}
 
-	OMAPRPC_INFO(rpcserv->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpcserv->dev,
 		"OMAPRPC: Allocating local function call copy for %u bytes\n",
 		len);
 
@@ -765,6 +839,9 @@ static ssize_t omaprpc_write(struct file *filp,
 	packet->result = 0;
 	packet->data_size = sizeof(struct omaprpc_parameter_t) *
 				function->num_params;
+
+	/* compute the parameter pointer changes last since this will cause the
+	   cache operations */
 	parameters = (struct omaprpc_parameter_t *)packet->data;
 	for (param = 0; param < function->num_params; param++) {
 		parameters[param].size = function->params[param].size;
@@ -813,11 +890,6 @@ static ssize_t omaprpc_write(struct file *filp,
 		}
 	}
 
-#if defined(OMAPRPC_VERY_VERBOSE) /* Very Verbose Debugging Code */
-	print_hex_dump(KERN_DEBUG, "OMAPRPC: TX: ",
-			DUMP_PREFIX_NONE, 16, 1, kbuf, use, true);
-#endif
-
 	/* save the function data */
 	ret = omaprpc_fxn_add(rpc, function, rpc->msgId);
 	if (ret < 0) {
@@ -826,10 +898,17 @@ static ssize_t omaprpc_write(struct file *filp,
 		goto failure;
 	}
 
-#if defined(OMAPRPC_PERF_MEASUREMENT)
-	/* capture the time delay between write and callback */
-	do_gettimeofday(&start_time);
-#endif
+	/* dump the packet for debugging */
+	if (omaprpc_debug & OMAPRPC_ZONE_VERBOSE) {
+		print_hex_dump(KERN_DEBUG, "OMAPRPC: TX: ",
+			DUMP_PREFIX_NONE, 16, 1, kbuf, use, true);
+		omaprpc_print_msg(rpc, "TX:", kbuf);
+	}
+
+	if (omaprpc_debug & OMAPRPC_ZONE_PERF) {
+		/* capture the time delay between write and callback */
+		do_gettimeofday(&start_time);
+	}
 
 	/* Send the msg */
 	ret = rpmsg_send_offchannel(rpcserv->rpdev,
@@ -845,8 +924,8 @@ static ssize_t omaprpc_write(struct file *filp,
 		omaprpc_xlate_buffers(rpc, function, OMAPRPC_RPA_TO_UVA);
 		goto failure;
 	}
-	OMAPRPC_INFO(rpcserv->dev,
-		"OMAPRPC: Send msg to remote endpoint %u\n", rpc->dst);
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpcserv->dev,
+		"OMAPRPC: ==> Sent msg to remote endpoint %u\n", rpc->dst);
 failure:
 	if (ret >= 0)
 		ret = len;
@@ -923,7 +1002,7 @@ static int omaprpc_probe(struct rpmsg_channel *rpdev)
 	int ret, major, minor;
 	struct omaprpc_service_t *rpcserv = NULL, *tmp;
 
-	OMAPRPC_INFO(&rpdev->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, &rpdev->dev,
 		"OMAPRPC: Probing service with src %u dst %u\n",
 		rpdev->src, rpdev->dst);
 
@@ -1025,7 +1104,7 @@ serv_up:
 	/* Signal that the driver setup is complete */
 	complete_all(&rpcserv->comp);
 
-	OMAPRPC_INFO(&rpdev->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, &rpdev->dev,
 		"OMAPRPC: new RPC connection srv channel: %u -> %u!\n",
 		rpdev->src, rpdev->dst);
 	return 0;
@@ -1056,7 +1135,7 @@ static void __devexit omaprpc_remove(struct rpmsg_channel *rpdev)
 		return;
 	}
 
-	OMAPRPC_INFO(rpcserv->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpcserv->dev,
 		"OMAPRPC: removing rpmsg omaprpc driver %u.%u\n",
 		major, rpcserv->minor);
 
@@ -1072,7 +1151,7 @@ static void __devexit omaprpc_remove(struct rpmsg_channel *rpdev)
 		cdev_del(&rpcserv->cdev);
 		list_del(&rpcserv->list);
 		mutex_unlock(&rpcserv->lock);
-		OMAPRPC_INFO(&rpdev->dev,
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, &rpdev->dev,
 			"OMAPRPC: no instances, removed driver!\n");
 		kfree(rpcserv);
 		return;
@@ -1086,7 +1165,7 @@ static void __devexit omaprpc_remove(struct rpmsg_channel *rpdev)
 	init_completion(&rpcserv->comp);
 	rpcserv->state = OMAPRPC_SERVICE_STATE_DOWN;
 	list_for_each_entry(rpc, &rpcserv->instance_list, list) {
-		OMAPRPC_INFO(rpcserv->dev, "Instance %p in state %d\n",
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpcserv->dev, "Instance %p in state %d\n",
 			rpc, rpc->state);
 		/* set rpc instance to fault state */
 		rpc->state = OMAPRPC_STATE_FAULT;
@@ -1102,7 +1181,7 @@ static void __devexit omaprpc_remove(struct rpmsg_channel *rpdev)
 		wake_up_interruptible(&rpc->readq);
 	}
 	mutex_unlock(&rpcserv->lock);
-	OMAPRPC_INFO(&rpdev->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, &rpdev->dev,
 		"OMAPRPC: removed rpmsg omaprpc driver.\n");
 }
 
@@ -1146,7 +1225,7 @@ static void omaprpc_driver_cb(struct rpmsg_channel *rpdev,
 			break;
 		}
 
-		OMAPRPC_INFO(&rpdev->dev,
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, &rpdev->dev,
 			"OMAPRPC: creating device: %s\n", info->name);
 		/* Create the /dev sysfs entry */
 		rpcserv->dev = device_create(omaprpc_class, &rpdev->dev,
@@ -1211,8 +1290,9 @@ static int __init omaprpc_init(void)
 	}
 
 	ret = register_rpmsg_driver(&omaprpc_driver);
-	pr_err("OMAPRPC: Registration of OMAPRPC rpmsg service returned %d!\n",
-		ret);
+	pr_err("OMAPRPC: Registration of OMAPRPC rpmsg service returned %d! "
+		"debug=%d\n",
+		ret, omaprpc_debug);
 	return ret;
 unreg_region:
 	unregister_chrdev_region(omaprpc_dev, OMAPRPC_CORE_REMOTE_MAX);

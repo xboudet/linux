@@ -51,7 +51,7 @@ uint8_t *omaprpc_map_parameter(struct omaprpc_instance_t *rpc,
 
 	/* in ION case, secondary offset is ignored here because the entire
 	 region is mapped. */
-	OMAPRPC_INFO(rpc->rpcserv->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 		"Mapped UVA:%p to KVA:%p+OFF:%08x SIZE:%08x "
 		"(MKVA:%p to END:%p)\n",
 		(void *)param->data,
@@ -79,7 +79,7 @@ phys_addr_t omaprpc_buffer_lookup(struct omaprpc_instance_t *rpc,
 	/* For Tiler2D offset is corrected later*/
 	long uoff = uva - buva;
 
-	OMAPRPC_INFO(rpc->rpcserv->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 		"CORE=%u BUVA=%p UVA=%p Uoff=%ld [0x%016lx] Hdl=%p\n",
 		core, (void *)buva, (void *)uva, uoff, (ulong)uoff, reserved);
 
@@ -102,7 +102,7 @@ phys_addr_t omaprpc_buffer_lookup(struct omaprpc_instance_t *rpc,
 		handle = (struct ion_handle *)reserved;
 		if (!ion_phys(rpc->ion_client, handle, &paddr, &unused)) {
 			lpa = (phys_addr_t)paddr;
-			OMAPRPC_INFO(rpc->rpcserv->dev,
+			OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 				"Handle %p is an ION Handle to ARM PA %p "
 				"(Uoff=%ld)\n", reserved, (void *)lpa, uoff);
 			uoff = omaprpc_recalc_off(lpa, uoff);
@@ -122,7 +122,8 @@ phys_addr_t omaprpc_buffer_lookup(struct omaprpc_instance_t *rpc,
 			if (handle && !ion_phys(pvr_ion_client, handle, &paddr,
 				&unused)) {
 				lpa = (phys_addr_t)paddr;
-				OMAPRPC_INFO(rpc->rpcserv->dev,
+				OMAPRPC_PRINT(OMAPRPC_ZONE_INFO,
+					rpc->rpcserv->dev,
 					"FD %d is an PVR Handle to ARM PA %p "
 					"(Uoff=%ld)\n", (int)reserved,
 					(void *)lpa, uoff);
@@ -141,7 +142,7 @@ to_va:
 	/* convert the local physical address to remote physical address */
 	rpa = rpmsg_local_to_remote_pa(rpc, lpa);
 to_end:
-	OMAPRPC_INFO(rpc->rpcserv->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 		"ARM VA %p == ARM PA %p => REMOTE[%u] PA %p (RESV %p)\n",
 		(void *)uva, (void *)lpa, core, (void *)rpa, reserved);
 	return rpa;
@@ -161,7 +162,8 @@ int omaprpc_xlate_buffers(struct omaprpc_instance_t *rpc,
 
 	limit = function->num_translations;
 	memset(base_ptrs, 0, sizeof(base_ptrs));
-	OMAPRPC_INFO(rpc->rpcserv->dev, "Operating on %d pointers\n",
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
+		"Operating on %d pointers\n",
 		function->num_translations);
 	/* we may have a failure during translation, in which case we need to
 	   unwind the whole operation from here */
@@ -233,7 +235,8 @@ restart:
 				/* load the user's VA */
 				uva = *(virt_addr_t *)kva;
 
-				OMAPRPC_INFO(rpc->rpcserv->dev,
+				OMAPRPC_PRINT(OMAPRPC_ZONE_INFO,
+					rpc->rpcserv->dev,
 					"Replacing UVA %p at KVA %p PTRIDX:%u "
 					"OFFSET:%u IDX:%d\n",
 					(void *)uva, (void *)kva, ptr_idx,
@@ -247,7 +250,8 @@ restart:
 				/* replace with new RPA */
 				*(phys_addr_t *)kva = rpa;
 
-				OMAPRPC_INFO(rpc->rpcserv->dev,
+				OMAPRPC_PRINT(OMAPRPC_ZONE_INFO,
+					rpc->rpcserv->dev,
 					"Replaced UVA %p with RPA %p at KVA %p\n",
 					(void *)uva, (void *)rpa, (void *)kva);
 
@@ -279,7 +283,8 @@ restart:
 				remember version */
 				*(virt_addr_t *)kva = uva;
 
-				OMAPRPC_INFO(rpc->rpcserv->dev,
+				OMAPRPC_PRINT(OMAPRPC_ZONE_INFO,
+					rpc->rpcserv->dev,
 					"Replaced RPA %p with UVA %p at KVA %p",
 					"\n", (void *)rpa, (void *)uva,
 					(void *)kva);

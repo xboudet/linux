@@ -102,18 +102,14 @@ extern struct ion_device *omap_ion_device;
 #undef	OMAPRPC_USE_ION
 #endif
 
-/* Testing and debugging defines, leave undef'd in production */
-#undef OMAPRPC_DEBUGGING
-#undef OMAPRPC_VERY_VERBOSE
-#undef OMAPRPC_PERF_MEASUREMENT
+#define OMAPRPC_ZONE_INFO	(0x1)
+#define OMAPRPC_ZONE_PERF	(0x2)
+#define OMAPRPC_ZONE_VERBOSE	(0x4)
 
-#if defined(OMAPRPC_DEBUGGING)
-#define OMAPRPC_INFO(dev, fmt, ...)	dev_info(dev, fmt, ## __VA_ARGS__)
+extern unsigned int omaprpc_debug;
+
+#define OMAPRPC_PRINT(flag, dev, fmt, ...)	if (flag & omaprpc_debug) { dev_info(dev, fmt, ## __VA_ARGS__); }
 #define OMAPRPC_ERR(dev, fmt, ...)	dev_err(dev, fmt, ## __VA_ARGS__)
-#else
-#define OMAPRPC_INFO(dev, fmt, ...)
-#define OMAPRPC_ERR(dev, fmt, ...)	dev_err(dev, fmt, ## __VA_ARGS__)
-#endif
 
 #ifdef CONFIG_PHYS_ADDR_T_64BIT
 typedef u64 virt_addr_t;

@@ -38,7 +38,7 @@ static struct dma_info_t *omaprpc_dma_sub(struct omaprpc_instance_t *rpc,
 	struct dma_info_t *pos, *n;
 	mutex_lock(&rpc->lock);
 	list_for_each_entry_safe(pos, n, &rpc->dma_list, list) {
-		OMAPRPC_INFO(rpc->rpcserv->dev,
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 			"Looking for FD %u, found FD %u\n", fd, pos->fd);
 		if (pos->fd == fd) {
 			list_del((struct list_head *)pos);
@@ -57,7 +57,10 @@ static int omaprpc_dma_add(struct omaprpc_instance_t *rpc,
 		mutex_lock(&rpc->lock);
 		list_add(&dma->list, &rpc->dma_list);
 		mutex_unlock(&rpc->lock);
-		OMAPRPC_INFO(rpc->rpcserv->dev, "Added FD %u to list", dma->fd);
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO,
+			rpc->rpcserv->dev,
+			"Added FD %u to list",
+			dma->fd);
 	}
 	return 0;
 }
@@ -69,12 +72,21 @@ phys_addr_t omaprpc_pin_buffer(struct omaprpc_instance_t *rpc, void *reserved)
 		return 0;
 
 	dma->fd = (int)reserved;
-	OMAPRPC_INFO(rpc->rpcserv->dev, "Pining with FD %u\n", dma->fd);
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO,
+		rpc->rpcserv->dev,
+		"Pining with FD %u\n",
+		dma->fd);
 	dma->dbuf = dma_buf_get((int)reserved);
 	if (!(IS_ERR(dma->dbuf))) {
-		OMAPRPC_INFO(rpc->rpcserv->dev, "DMA_BUF=%p\n", dma->dbuf);
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO,
+			rpc->rpcserv->dev,
+			"DMA_BUF=%p\n",
+			dma->dbuf);
 		dma->attach = dma_buf_attach(dma->dbuf, rpc->rpcserv->dev);
-		OMAPRPC_INFO(rpc->rpcserv->dev, "attach=%p\n", dma->attach);
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO,
+			rpc->rpcserv->dev,
+			"attach=%p\n",
+			dma->attach);
 		dma->sgt = dma_buf_map_attachment(dma->attach,
 			DMA_BIDIRECTIONAL);
 		omaprpc_dma_add(rpc, dma);
@@ -93,14 +105,14 @@ phys_addr_t omaprpc_dma_find(struct omaprpc_instance_t *rpc, void *reserved)
 	mutex_lock(&rpc->lock);
 	list_for_each(pos, &rpc->dma_list) {
 		node = (struct dma_info_t *)pos;
-		OMAPRPC_INFO(rpc->rpcserv->dev,
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 			"Looking for FD %u, found FD %u\n", fd, node->fd);
 		if (node->fd == fd) {
 			addr = sg_dma_address(node->sgt->sgl);
 			break;
 		}
 	}
-	OMAPRPC_INFO(rpc->rpcserv->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 		"Returning Addr %p for FD %u\n", (void *)addr, fd);
 	mutex_unlock(&rpc->lock);
 	return addr;
@@ -128,7 +140,7 @@ phys_addr_t omaprpc_buffer_lookup(struct omaprpc_instance_t *rpc,
 	/* For Tiler2D offset is corrected later*/
 	long uoff = uva - buva;
 
-	OMAPRPC_INFO(rpc->rpcserv->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 		"CORE=%u BUVA=%p UVA=%p Uoff=%ld [0x%016lx] Hdl=%p\n",
 		core, (void *)buva, (void *)uva, uoff, (ulong)uoff, reserved);
 
@@ -148,7 +160,7 @@ phys_addr_t omaprpc_buffer_lookup(struct omaprpc_instance_t *rpc,
 
 		/* recalculate the offset in the user buffer
 		 (accounts for tiler 2D) */
-		uoff += omaprpc_recalc_off(lpa, uoff);
+		uoff = omaprpc_recalc_off(lpa, uoff);
 
 		/* offset the lpa by the offset in the user buffer */
 		lpa += uoff;
@@ -157,7 +169,7 @@ phys_addr_t omaprpc_buffer_lookup(struct omaprpc_instance_t *rpc,
 		 address */
 		rpa = rpmsg_local_to_remote_pa(core, lpa);
 	}
-	OMAPRPC_INFO(rpc->rpcserv->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 		"ARM VA %p == ARM PA %p => REMOTE[%u] PA %p (RESV %p)\n",
 		(void *)uva, (void *)lpa, core, (void *)rpa, reserved);
 	return rpa;
@@ -180,13 +192,13 @@ int omaprpc_xlate_buffers(struct omaprpc_instance_t *rpc,
 
 	limit = function->num_translations;
 	memset(base_ptrs, 0, sizeof(base_ptrs));
-	OMAPRPC_INFO(rpc->rpcserv->dev,
+	OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 		"Operating on %d pointers\n", function->num_translations);
 	/* we may have a failure during translation, in which case we need to
 	   unwind the whole operation from here */
 
 	for (idx = start; idx != limit; idx += inc) {
-		OMAPRPC_INFO(rpc->rpcserv->dev,
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 			"#### Starting Translation %d of %d by %d\n",
 			idx, limit, inc);
 		/* conveinence variables */
@@ -258,7 +270,8 @@ int omaprpc_xlate_buffers(struct omaprpc_instance_t *rpc,
 			pg_offset = ((pri_offset + sec_offset) & (PAGE_SIZE-1));
 
 			if (base_ptrs[ptr_idx] != NULL) {
-				OMAPRPC_INFO(rpc->rpcserv->dev,
+				OMAPRPC_PRINT(OMAPRPC_ZONE_INFO,
+					rpc->rpcserv->dev,
 					"KMap'd base_ptr[%u]=%p dbuf=%p into "
 					"kernel from %zu for %zu bytes, "
 					"PG_OFFSET=%u\n",
@@ -308,7 +321,8 @@ int omaprpc_xlate_buffers(struct omaprpc_instance_t *rpc,
 					goto unwind;
 				}
 
-				OMAPRPC_INFO(rpc->rpcserv->dev,
+				OMAPRPC_PRINT(OMAPRPC_ZONE_INFO,
+					rpc->rpcserv->dev,
 					"Replacing UVA %p at KVA %p PTRIDX:%u "
 					"PG_OFFSET:%u IDX:%d RESV:%p\n",
 					(void *)uva, (void *)kva, ptr_idx,
@@ -323,7 +337,8 @@ int omaprpc_xlate_buffers(struct omaprpc_instance_t *rpc,
 				/* replace with new RPA */
 				*(phys_addr_t *)kva = rpa;
 
-				OMAPRPC_INFO(rpc->rpcserv->dev,
+				OMAPRPC_PRINT(OMAPRPC_ZONE_INFO,
+					rpc->rpcserv->dev,
 					"Replaced UVA %p with RPA %p at KVA %p\n",
 					(void *)uva, (void *)rpa, (void *)kva);
 
@@ -361,7 +376,8 @@ int omaprpc_xlate_buffers(struct omaprpc_instance_t *rpc,
 				/* @TODO DMA_BUF requires unmapping the data
 				from the TILER. */
 
-				OMAPRPC_INFO(rpc->rpcserv->dev,
+				OMAPRPC_PRINT(OMAPRPC_ZONE_INFO,
+					rpc->rpcserv->dev,
 					"Replaced RPA %p with UVA %p at KVA %p\n",
 					(void *)rpa, (void *)uva, (void *)kva);
 
@@ -406,7 +422,7 @@ restart:
 			size_t start = (pri_offset + sec_offset) & PAGE_MASK;
 			size_t end	 = PAGE_SIZE;
 
-			OMAPRPC_INFO(rpc->rpcserv->dev,
+			OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
 				"Unkmaping base_ptrs[%u]=%p from dbuf=%p %zu "
 				"for %zu bytes\n",
 				ptr_idx,
