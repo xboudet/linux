@@ -29,6 +29,9 @@ $(stampdir)/stamp-prepare-tree-%: $(commonconfdir)/config.common.$(family) $(arc
 # Used by developers as a shortcut to prepare a tree for compilation.
 prepare-%: $(stampdir)/stamp-prepare-%
 	@echo Prepared $* for $(arch)
+# Used by developers to allow efficient pre-building without fakeroot.
+build-%: $(stampdir)/stamp-build-%
+	@echo Built $* for $(arch)
 
 # Do the actual build, including image and modules
 $(stampdir)/stamp-build-%: target_flavour = $*
@@ -164,6 +167,15 @@ ifneq ($(skipdbg),true)
 		$(dbgpkgdir)/usr/lib/debug/boot/vmlinux-$(abi_release)-$*
 	$(build_cd) $(kmake) $(build_O) modules_install \
 		INSTALL_MOD_PATH=$(dbgpkgdir)/usr/lib/debug
+	# Add .gnu_debuglink sections to each stripped .ko
+	# pointing to unstripped verson
+	find $(pkgdir) -name '*.ko' | sed 's|$(pkgdir)||'| while read module ; do \
+		if [[ -f "$(dbgpkgdir)/usr/lib/debug/$$module" ]] ; then \
+			$(CROSS_COMPILE)objcopy \
+				--add-gnu-debuglink=$(dbgpkgdir)/usr/lib/debug/$$module \
+				$(pkgdir)/$$module; \
+		fi; \
+	done
 	rm -f $(dbgpkgdir)/usr/lib/debug/lib/modules/$(abi_release)-$*/build
 	rm -f $(dbgpkgdir)/usr/lib/debug/lib/modules/$(abi_release)-$*/source
 	rm -f $(dbgpkgdir)/usr/lib/debug/lib/modules/$(abi_release)-$*/modules.*
@@ -181,6 +193,9 @@ endif
 	# We'll symlink this stuff
 	rm -f $(hdrdir)/Makefile
 	rm -rf $(hdrdir)/include2
+	# Copy over the compilation version.
+	cp "$(builddir)/build-$*/include/generated/compile.h" \
+		"$(hdrdir)/include/generated/compile.h"
 	# powerpc seems to need some .o files for external module linking. Add them in.
 ifeq ($(arch),powerpc)
 	mkdir -p $(hdrdir)/arch/powerpc/lib
@@ -188,9 +203,6 @@ ifeq ($(arch),powerpc)
 endif
 	# Script to symlink everything up
 	$(SHELL) $(DROOT)/scripts/link-headers "$(hdrdir)" "$(basepkg)" "$*"
-	# Setup the proper asm symlink
-	rm -f $(hdrdir)/include/asm
-	ln -s asm-$(asm_link) $(hdrdir)/include/asm
 	# The build symlink
 	install -d debian/$(basepkg)-$*/lib/modules/$(abi_release)-$*
 	ln -s /usr/src/$(basepkg)-$* \
@@ -386,24 +398,27 @@ endif
 #
 # per-architecture packages
 #
+builddirpa = $(builddir)/tools-perarch
+
 $(stampdir)/stamp-prepare-perarch:
 	@echo "Preparing perarch ..."
 ifeq ($(do_tools),true)
-	rm -rf $(builddir)/tools
-	install -d $(builddir)/tools
-	for i in *; do ln -s $(CURDIR)/$$i $(builddir)/tools/; done
-	rm $(builddir)/tools/tools
-	rsync -a tools/ $(builddir)/tools/tools/
+	rm -rf $(builddirpa)/tools
+	install -d $(builddirpa)/tools
+	for i in *; do ln -s $(CURDIR)/$$i $(builddirpa)/tools/; done
+	rm $(builddirpa)/tools/tools
+	rsync -a tools/ $(builddirpa)/tools/tools/
 endif
 	touch $@
 
 $(stampdir)/stamp-build-perarch: $(stampdir)/stamp-prepare-perarch
 ifeq ($(do_tools),true)
-	cd $(builddir)/tools/tools/perf && \
-		make HAVE_CPLUS_DEMANGLE=1 $(CROSS_COMPILE) $(conc_level)
+	cd $(builddirpa)/tools/tools/perf && \
+		make HAVE_CPLUS_DEMANGLE=1 CROSS_COMPILE=$(CROSS_COMPILE) $(conc_level)
 	if [ "$(arch)" = "amd64" ] || [ "$(arch)" = "i386" ]; then \
-		cd $(builddir)/tools/tools/power/x86/x86_energy_perf_policy && make $(CROSS_COMPILE); \
-		cd $(builddir)/tools/tools/power/x86/turbostat && make $(CROSS_COMPILE); \
+		cd $(builddirpa)/tools/tools/power/x86/x86_energy_perf_policy && make CROSS_COMPILE=$(CROSS_COMPILE); \
+		cd $(builddirpa)/tools/tools/power/x86/turbostat && make CROSS_COMPILE=$(CROSS_COMPILE); \
+		cd $(builddirpa)/tools/tools/hv && make CROSS_COMPILE=$(CROSS_COMPILE) CFLAGS=-I../../include; \
 	fi
 endif
 	@touch $@
@@ -413,13 +428,16 @@ install-perarch: $(stampdir)/stamp-build-perarch
 	# Add the tools.
 ifeq ($(do_tools),true)
 	install -d $(toolspkgdir)/usr/bin
-	install -s -m755 $(builddir)/tools/tools/perf/perf \
+	install -s -m755 $(builddirpa)/tools/tools/perf/perf \
 		$(toolspkgdir)/usr/bin/perf_$(abi_release)
 	if [ "$(arch)" = "amd64" ] || [ "$(arch)" = "i386" ]; then \
-		install -s -m755 $(builddir)/tools/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy \
+		install -s -m755 $(builddirpa)/tools/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy \
 			$(toolspkgdir)/usr/bin/x86_energy_perf_policy_$(abi_release); \
-		install -s -m755 $(builddir)/tools/tools/power/x86/turbostat/turbostat \
+		install -s -m755 $(builddirpa)/tools/tools/power/x86/turbostat/turbostat \
 			$(toolspkgdir)/usr/bin/turbostat_$(abi_release); \
+		install -d $(toolspkgdir)/usr/sbin; \
+		install -s -m755 $(builddirpa)/tools/tools/hv/hv_kvp_daemon \
+			$(toolspkgdir)/usr/sbin/hv_kvp_daemon_$(abi_release); \
 	fi
 endif
 
