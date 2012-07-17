@@ -9,10 +9,12 @@ value CONFIG_SECURITY y
 !exists CONFIG_SECURITY_FILE_CAPABILITIES | value CONFIG_SECURITY_FILE_CAPABILITIES y
 value CONFIG_SECURITY_SELINUX y
 value CONFIG_SECURITY_SMACK y
+value CONFIG_SECURITY_YAMA y
 value CONFIG_SYN_COOKIES y
+value CONFIG_DEFAULT_SECURITY_APPARMOR y
 # For architectures which support this option ensure it is enabled.
 !exists CONFIG_SECCOMP | value CONFIG_SECCOMP y
-!exists CONFIG_HAVE_SECCOMP_FILTER | value CONFIG_SECCOMP_FILTER y
+!exists CONFIG_HAVE_ARCH_SECCOMP_FILTER | value CONFIG_SECCOMP_FILTER y
 !exists CONFIG_CC_STACKPROTECTOR | value CONFIG_CC_STACKPROTECTOR y
 !exists CONFIG_DEBUG_RODATA | value CONFIG_DEBUG_RODATA y
 !exists CONFIG_DEBUG_SET_MODULE_RONX | value CONFIG_DEBUG_SET_MODULE_RONX y
@@ -94,3 +96,13 @@ value CONFIG_EFI_VARS y | !exists CONFIG_EFI_VARS
 # See LP:923094
 !exists CONFIG_THERM_ADT746X | \
  (flavour powerpc powerpc-smp & value CONFIG_THERM_ADT746X y)
+
+# Ensure CONFIG_NVRAM is y for powerpc and powerpc-smp, LP:942193
+(flavour powerpc powerpc-smp & value CONFIG_NVRAM y) | \
+ (value CONFIG_NVRAM m | !exists CONFIG_NVRAM)
+
+# Ensure CONFIG_STUB_POULSBO is disabled if CONFIG_DRM_PSB is enabled
+# See LP:899244
+(!exists CONFIG_DRM_PSB | value CONFIG_DRM_PSB n) | \
+((value CONFIG_DRM_PSB y | value CONFIG_DRM_PSB m) & (value CONFIG_STUB_POULSBO n | !exists CONFIG_STUB_POULSBO))
+
