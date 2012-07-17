@@ -82,6 +82,7 @@ endif
 
 install-tools: toolspkg = $(tools_common_pkg_name)
 install-tools: toolsbin = $(CURDIR)/debian/$(toolspkg)/usr/bin
+install-tools: toolssbin = $(CURDIR)/debian/$(toolspkg)/usr/sbin
 install-tools: toolsman = $(CURDIR)/debian/$(toolspkg)/usr/share/man
 install-tools: install-source
 ifeq ($(do_tools),true)
@@ -96,6 +97,8 @@ ifeq ($(do_tools),true)
 	if [ "$(arch)" = "amd64" ] || [ "$(arch)" = "i386" ]; then \
 		install -m755 debian/tools/x86_energy_perf_policy $(toolsbin)/x86_energy_perf_policy; \
 		install -m755 debian/tools/turbostat $(toolsbin)/turbostat; \
+		install -d $(toolssbin) ; \
+		install -m755 debian/tools/generic $(toolssbin)/hv_kvp_daemon; \
 	fi
 
 	rm -rf $(builddir)/tools
@@ -111,6 +114,7 @@ ifeq ($(do_tools),true)
 		install -d $(toolsman)/man8; \
 		install -m644 $(CURDIR)/tools/power/x86/x86_energy_perf_policy/*.8 $(toolsman)/man8; \
 		install -m644 $(CURDIR)/tools/power/x86/turbostat/*.8 $(toolsman)/man8; \
+		install -m644 $(CURDIR)/tools/hv/*.8 $(toolsman)/man8; \
 	fi
 endif
 
