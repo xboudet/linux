@@ -32,6 +32,23 @@
 
 #include "omap_rpc_internal.h"
 
+static void omaprpc_dma_clear(struct omaprpc_instance_t *rpc)
+{
+	struct dma_info_t *pos, *n;
+	mutex_lock(&rpc->lock);
+	list_for_each_entry_safe(pos, n, &rpc->dma_list, list) {
+		OMAPRPC_PRINT(OMAPRPC_ZONE_INFO, rpc->rpcserv->dev,
+			"Removing Pinning for FD %u\n", pos->fd);
+		list_del((struct list_head *)pos);
+		dma_buf_unmap_attachment(pos->attach, pos->sgt, DMA_BIDIRECTIONAL);
+		dma_buf_detach(pos->dbuf, pos->attach);
+		dma_buf_put(pos->dbuf);
+		kfree(pos);
+	}
+	mutex_unlock(&rpc->lock);
+	return;
+}
+
 static struct dma_info_t *omaprpc_dma_sub(struct omaprpc_instance_t *rpc,
 					 int fd)
 {
@@ -151,7 +168,7 @@ phys_addr_t omaprpc_buffer_lookup(struct omaprpc_instance_t *rpc,
 			(void *)buva, (void *)uva);
 		rpa = 0;
 	} else {
-		/* find the base of the dam buf from the list */
+		/* find the base of the dma buf from the list */
 		lpa = omaprpc_dma_find(rpc, reserved);
 		if (lpa == 0) {
 			/* wasn't in the list, convert the pointer */
@@ -203,7 +220,7 @@ int omaprpc_xlate_buffers(struct omaprpc_instance_t *rpc,
 			idx, limit, inc);
 		/* conveinence variables */
 		ptr_idx = function->translations[idx].index;
-		sec_offset	= function->translations[idx].offset;
+		sec_offset = function->translations[idx].offset;
 
 		/* if the pointer index for this translation is invalid */
 		if (ptr_idx >= OMAPRPC_MAX_PARAMETERS) {
@@ -445,6 +462,12 @@ restart:
 			dbufs[ptr_idx] = NULL;
 			pg_offset = 0;
 		}
+	}
+	if (direction == OMAPRPC_RPA_TO_UVA)
+	{
+		/* we're done translating everything, unpin all the translations
+		   and the parameters */
+		omaprpc_dma_clear(rpc);
 	}
 	return ret;
 }
