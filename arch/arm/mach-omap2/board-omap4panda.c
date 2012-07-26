@@ -621,12 +621,12 @@ static void omap4_panda_init_rev(void)
 	if (cpu_is_omap443x()) {
 		/* PandaBoard 4430 */
 		/* ASoC audio configuration */
-		panda_abe_audio_data.card_name = "PandaBoard";
+		panda_abe_audio_data.card_name = "Panda";
 		panda_abe_audio_data.has_hsmic = 1;
 	} else {
 		/* PandaBoard ES */
 		/* ASoC audio configuration */
-		panda_abe_audio_data.card_name = "PandaBoardES";
+		panda_abe_audio_data.card_name = "PandaES";
 	}
 }
 
