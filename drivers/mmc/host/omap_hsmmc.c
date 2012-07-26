@@ -287,13 +287,12 @@ static int omap_hsmmc_1_set_power(struct device *dev, int slot, int power_on,
 
 		if (host->vcc_aux && !host->regulator_enabled && !ret) {
 			ret = regulator_enable(host->vcc_aux);
-			if (!ret) {
+			if (!ret)
 				host->regulator_enabled = 1;
 				msleep(100);
-			}
 		}
 	} else {
-		if (host->vcc_aux && host->regulator_enabled) {
+		if (host->vcc_aux && regulator_is_enabled(host->vcc_aux) > 0) {
 			ret = regulator_disable(host->vcc_aux);
 			if (!ret)
 				host->regulator_enabled = 0;
