@@ -20,3 +20,7 @@ CONFIG_OMAP2_DSS=n
 #USB EHCI breaks on repeated suspend/resume
 CONFIG_USB_EHCI_HCD=n
 
+#prevent Ducati/Tesla from running
+CONFIG_OMAP_REMOTEPROC_IPU=n
+CONFIG_OMAP_REMOTEPROC_DSP=n
+
