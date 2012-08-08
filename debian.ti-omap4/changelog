@@ -1,3 +1,12 @@
+linux-ti-omap4 (3.4.0-1486.2) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1486.2
+  * New Linaro kernel 3.4 reference: tilt-3.4 - commit c8eb683
+
+ -- Xavier Boudet <x-boudet@ti.com>  Wed, 08 August 2012 11:39:01 +0200
+
 linux-ti-omap4 (3.4.0-1486.1) precise; urgency=low
 
   [ Xavier Boudet ]
