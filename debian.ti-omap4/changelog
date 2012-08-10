@@ -1,3 +1,14 @@
+linux-ti-omap4 (3.4.0-1486.3) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1486.3
+  * Remoteproc off mode support fixes
+  * WriteBack buffer hack
+  * Updated config
+
+ -- Xavier Boudet <x-boudet@ti.com>  Fri, 10 August 2012 09:54:01 +0200
+
 linux-ti-omap4 (3.4.0-1486.2) precise; urgency=low
 
   [ Xavier Boudet ]
