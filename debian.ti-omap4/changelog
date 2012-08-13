@@ -1,3 +1,13 @@
+linux-ti-omap4 (3.4.0-1486.4) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1486.4
+  * ARM ERRATA Review
+  * Remoteproc/rpmsg patches
+
+ -- Xavier Boudet <x-boudet@ti.com>  Tue, 14 August 2012 14:41:01 +0200
+
 linux-ti-omap4 (3.4.0-1486.3) precise; urgency=low
 
   [ Xavier Boudet ]
