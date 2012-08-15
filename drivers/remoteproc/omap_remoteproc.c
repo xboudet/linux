@@ -41,7 +41,6 @@
 
 /* 1 sec is fair enough time for suspending an OMAP device */
 #define DEF_SUSPEND_TIMEOUT 1000
-#define DEF_QOS_LATENCY	300
 
 /**
  * struct omap_rproc - omap remote processor state
@@ -428,16 +427,11 @@ static int _suspend(struct rproc *rproc, bool auto_suspend)
 static int omap_rproc_suspend(struct rproc *rproc, bool auto_suspend)
 {
 	struct omap_rproc *oproc = rproc->priv;
-	int ret;
 
 	if (auto_suspend && !_rproc_idled(oproc))
 		return -EBUSY;
 
-	ret = _suspend(rproc, auto_suspend);
-	if (ret < 0)
-		return ret;
-
-	return 0;
+	return _suspend(rproc, auto_suspend);
 }
 
 static int _resume_kick(int id, void *p, void *rproc)
@@ -456,7 +450,6 @@ static int omap_rproc_resume(struct rproc *rproc)
 	int ret, i;
 
 	oproc->suspended = false;
-
 	/* boot address could be lost after suspend, so restore it */
 	if (oproc->boot_reg)
 		writel(rproc->bootaddr, oproc->boot_reg);
@@ -532,12 +525,9 @@ static int __devinit omap_rproc_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, rproc);
 	ret = dev_pm_qos_add_request(&pdev->dev, &oproc->qos_req,
-			DEF_QOS_LATENCY);
-	if (ret < 0) {
-		dev_err(&rproc->dev, "%s failed to add QoS constraint %d\n",
-			__func__, ret);
+			PM_QOS_DEFAULT_VALUE);
+	if (ret)
 		goto iounmap;
-	}
 
 	pm_qos_add_request(&oproc->bw_req, PM_QOS_MEMORY_THROUGHPUT,
 				PM_QOS_MEMORY_THROUGHPUT_DEFAULT_VALUE);
