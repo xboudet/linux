@@ -1,3 +1,15 @@
+linux-ti-omap4 (3.4.0-1486.5) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1486.5
+  * ARM ERRATA fixes
+  * twl6040, hsmmc and Serial erratas
+  * Upstream rebase rpmsg/remoteproc
+  * Add OMAP RPC driver
+
+ -- Xavier Boudet <x-boudet@ti.com>  Thu, 16 August 2012 09:38:01 +0200
+
 linux-ti-omap4 (3.4.0-1486.4) precise; urgency=low
 
   [ Xavier Boudet ]

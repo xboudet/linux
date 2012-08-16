@@ -1197,6 +1197,7 @@ omap_remoteproc
 omap_rpmsg_resmgr
 omap_udc
 omapdce
+omaprpc
 omfs
 omninet
 onenand
