@@ -1,3 +1,12 @@
+linux-ti-omap4 (3.4.0-1486.7) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1486.7
+  * Update CMA: alignment with new FW
+
+ -- Xavier Boudet <x-boudet@ti.com>  Tue, 21 August 2012 17:06:01 +0200
+
 linux-ti-omap4 (3.4.0-1486.6) precise; urgency=low
 
   [ Xavier Boudet ]
@@ -6,7 +15,7 @@ linux-ti-omap4 (3.4.0-1486.6) precise; urgency=low
   * Fix twd interrupt
   * omapdce PM
 
- -- Xavier Boudet <x-boudet@ti.com>  Thu, 21 August 2012 09:49:01 +0200
+ -- Xavier Boudet <x-boudet@ti.com>  Tue, 21 August 2012 09:49:01 +0200
 
 linux-ti-omap4 (3.4.0-1486.5) precise; urgency=low
 
