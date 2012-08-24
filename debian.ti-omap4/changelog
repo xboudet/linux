@@ -1,3 +1,15 @@
+linux-ti-omap4 (3.4.0-1486.8) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1486.8
+  * remoteproc: retry 4 sec only to load Tesla FW
+  * merge mm and SCSI patches from git://git.omapzoom.org/kernel/omap.git
+    - branch: p-androidomap-3.4
+    - commit: 33d7c3dfb5a299c7c081af6d15544d4747e153f3
+
+ -- Xavier Boudet <x-boudet@ti.com>  Fri, 24 August 2012 14:07:01 +0200
+
 linux-ti-omap4 (3.4.0-1486.7) precise; urgency=low
 
   [ Xavier Boudet ]
