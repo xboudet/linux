@@ -9574,6 +9574,7 @@ EXPORT_SYMBOL_GPL vmlinux 0xb6659215	atomic_notifier_call_chain
 EXPORT_SYMBOL_GPL vmlinux 0xb675fe99	fat_alloc_new_dir
 EXPORT_SYMBOL_GPL vmlinux 0xb680e7a6	scsi_queue_work
 EXPORT_SYMBOL_GPL vmlinux 0xb680eaeb	devres_alloc
+EXPORT_SYMBOL_GPL vmlinux 0xb68538b1	evict_bh_lrus
 EXPORT_SYMBOL_GPL vmlinux 0xb68cb30e	sysfs_notify_dirent
 EXPORT_SYMBOL_GPL vmlinux 0xb69002ca	spi_get_next_queued_message
 EXPORT_SYMBOL_GPL vmlinux 0xb6a94572	usb_create_shared_hcd

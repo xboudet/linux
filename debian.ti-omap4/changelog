@@ -1,3 +1,14 @@
+linux-ti-omap4 (3.4.0-1486.10) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1486.10
+  * CMA allocation fix
+  * trimming patches
+  * flush_cache patch
+
+ -- Xavier Boudet <x-boudet@ti.com>  Wed, 05 September 2012 14:32:01 +0200
+
 linux-ti-omap4 (3.4.0-1486.9) precise; urgency=low
 
   [ Xavier Boudet ]
