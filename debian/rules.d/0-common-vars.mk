@@ -79,7 +79,7 @@ ifneq ($(full_build),false)
   uploadnum	:= $(uploadnum)-Ubuntu
 endif
 
-# XXX: linux-libc-dev got bumped to -803.N inadvertantly by a ti-omap4 upload
+# XXX: linux-libc-dev got bumped to -803.N inadvertantly by a ti-omap5 upload
 #      shift our version higher for this package only.  Ensure this only
 #      occurs for the v2.6.35 kernel so that we do not propogate this into
 #      any other series.

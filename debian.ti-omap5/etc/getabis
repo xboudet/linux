@@ -1,0 +1,4 @@
+repo_list=("http://ports.ubuntu.com/pool/main/l/linux-ti-omap5")
+
+getall armel omap5
+getall armhf omap5

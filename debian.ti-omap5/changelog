@@ -1,0 +1,36 @@
+linux-ti-omap5 (3.7.0-100.3) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.7.0-100.3
+  * New Config
+
+ -- Xavier Boudet <x-boudet@ti.com>  Tue, 30 October 2012 16:06:01 +0200
+
+linux-ti-omap5 (3.7.0-100.2) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.7.0-100.2
+  * Rebase on new 5432 branch
+
+ -- Xavier Boudet <x-boudet@ti.com>  Fri, 26 October 2012 17:30:01 +0200
+
+linux-ti-omap5 (3.7.0-100.1) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.7.0-100.1
+  * OMAP5
+
+ -- Xavier Boudet <x-boudet@ti.com>  Thu, 25 October 2012 19:00:01 +0200
+
+linux-ti-omap5 (3.7.0-100.0) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.7.0-100.0
+  * NEW ABI
+
+ -- Xavier Boudet <x-boudet@ti.com>  Thu, 25 October 2012 19:00:00 +0200
+

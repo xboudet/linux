@@ -3046,7 +3046,7 @@ linux (2.6.35-21.31) maverick; urgency=low
 
   [ Andy Whitcroft ]
 
-  * bodge linux-libc-dev package version due to ti-omap4 error
+  * bodge linux-libc-dev package version due to ti-omap5 error
   * linux-libc-dev -- ensure we can only build this on debian.master
 
  -- Leann Ogasawara <leann.ogasawara@canonical.com>  Mon, 13 Sep 2010 09:54:31 -0700
