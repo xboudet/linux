@@ -1,3 +1,14 @@
+linux-ti-omap4 (3.4.0-1487.2) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1487.2
+  * Fix reboot issue
+  * fine tune PL310 configuration
+  * Base on Linaro kernel 3.4 reference: tilt-3.4 - commit 5978c3c
+
+ -- Xavier Boudet <x-boudet@ti.com>  Wed, 12 September 2012 19:17:01 +0200
+
 linux-ti-omap4 (3.4.0-1487.1) precise; urgency=low
 
   [ Xavier Boudet ]
