@@ -788,6 +788,7 @@ static const struct of_device_id pca953x_dt_ids[] = {
 	{ .compatible = "ti,tca6408", },
 	{ .compatible = "ti,tca6416", },
 	{ .compatible = "ti,tca6424", },
+	{ .compatible = "ti,tca6424a-gpio", },
 	{ }
 };
 
