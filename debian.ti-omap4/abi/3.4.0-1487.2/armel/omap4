@@ -2601,6 +2601,7 @@ EXPORT_SYMBOL vmlinux 0x262e28c6	qdisc_destroy
 EXPORT_SYMBOL vmlinux 0x263beb75	ecryptfs_get_versions
 EXPORT_SYMBOL vmlinux 0x264cb558	prepare_to_wait_exclusive
 EXPORT_SYMBOL vmlinux 0x26821693	drm_idlelock_take
+EXPORT_SYMBOL vmlinux 0x268d60d3	omap_emif_frequency_post_notify
 EXPORT_SYMBOL vmlinux 0x269ce51d	netif_skb_features
 EXPORT_SYMBOL vmlinux 0x26ab2701	serio_reconnect
 EXPORT_SYMBOL vmlinux 0x26bb950b	__kfifo_from_user_r
@@ -3486,6 +3487,7 @@ EXPORT_SYMBOL vmlinux 0x5c1cea14	kernel_sock_shutdown
 EXPORT_SYMBOL vmlinux 0x5c2d32ef	omap_aess_wakeup
 EXPORT_SYMBOL vmlinux 0x5c4db26e	napi_complete
 EXPORT_SYMBOL vmlinux 0x5c4df9a5	journal_destroy
+EXPORT_SYMBOL vmlinux 0x5c5293c0	omap_emif_frequency_pre_notify
 EXPORT_SYMBOL vmlinux 0x5c574fcc	log_wait_commit
 EXPORT_SYMBOL vmlinux 0x5c64429d	ifla_policy
 EXPORT_SYMBOL vmlinux 0x5c669678	snd_info_create_card_entry
@@ -10004,6 +10006,7 @@ EXPORT_SYMBOL_GPL vmlinux 0xe7e36de4	pskb_put
 EXPORT_SYMBOL_GPL vmlinux 0xe7ffe877	pcpu_base_addr
 EXPORT_SYMBOL_GPL vmlinux 0xe835715b	proc_net_mkdir
 EXPORT_SYMBOL_GPL vmlinux 0xe837c037	v4l2_device_register
+EXPORT_SYMBOL_GPL vmlinux 0xe859f18b	omap_pm_set_min_bus_tput
 EXPORT_SYMBOL_GPL vmlinux 0xe85a9fd3	cpu_cluster_pm_exit
 EXPORT_SYMBOL_GPL vmlinux 0xe8611953	perf_tp_event
 EXPORT_SYMBOL_GPL vmlinux 0xe862c4b7	dpm_suspend_start

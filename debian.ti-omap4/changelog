@@ -1,3 +1,16 @@
+linux-ti-omap4 (3.4.0-1487.3) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1487.3
+  * Rebase on tilt-3.4:
+    - commit: d728dc2ffb2d00c24f89e6c1d50a866c2ac45acf
+    - Rebase on Linux 3.4.11
+    - OMAP4 EMIF enable selfrefresh
+    - OMAPDSS OFF mode
+
+ -- Xavier Boudet <x-boudet@ti.com>  Wed, 19 September 2012 10:44:01 +0200
+
 linux-ti-omap4 (3.4.0-1487.2) precise; urgency=low
 
   [ Xavier Boudet ]
