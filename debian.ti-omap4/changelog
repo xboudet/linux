@@ -1,3 +1,12 @@
+linux-ti-omap4 (3.4.0-1487.4) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1487.4
+  * Improve stability of DSS & HDMI with OFF
+
+ -- Xavier Boudet <x-boudet@ti.com>  Tue, 25 September 2012 20:25:01 +0200
+
 linux-ti-omap4 (3.4.0-1487.3) precise; urgency=low
 
   [ Xavier Boudet ]
