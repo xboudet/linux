@@ -1,3 +1,13 @@
+linux-ti-omap4 (3.4.0-1487.5) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1487.5
+  * Panda DSI pll
+  * DSS off mode stability patches
+
+ -- Xavier Boudet <x-boudet@ti.com>  Thu, 27 September 2012 18:01:01 +0200
+
 linux-ti-omap4 (3.4.0-1487.4) precise; urgency=low
 
   [ Xavier Boudet ]
