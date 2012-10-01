@@ -1,3 +1,12 @@
+linux-ti-omap4 (3.4.0-1487.6) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1487.6
+  * OMAPDSS: HDMI Fix
+
+ -- Xavier Boudet <x-boudet@ti.com>  Thu, 01 October 2012 15:10:01 +0200
+
 linux-ti-omap4 (3.4.0-1487.5) precise; urgency=low
 
   [ Xavier Boudet ]
