@@ -1,3 +1,12 @@
+linux-ti-omap4 (3.4.0-1487.7) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1487.7
+  * OMAPDSS: HDMI hotplug patches
+
+ -- Xavier Boudet <x-boudet@ti.com>  Wed, 03 October 2012 14:37:01 +0200
+
 linux-ti-omap4 (3.4.0-1487.6) precise; urgency=low
 
   [ Xavier Boudet ]
