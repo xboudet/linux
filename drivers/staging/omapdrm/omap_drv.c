@@ -30,7 +30,7 @@
 #define DRIVER_MINOR		0
 #define DRIVER_PATCHLEVEL	0
 
-static struct drm_device *drm_device;
+struct drm_device *drm_device;
 
 static int num_crtc = CONFIG_DRM_OMAP_NUM_CRTCS;
 
@@ -983,34 +983,21 @@ void omap_drm_file_set_priv(struct drm_file *file, int mapper_id, void *priv)
 }
 EXPORT_SYMBOL(omap_drm_file_set_priv);
 
-static int pdev_suspend(struct platform_device *device, pm_message_t state)
+static int pdev_suspend(struct platform_device *pDevice, pm_message_t state)
 {
-	DBG("%s\n", __func__);
-
-	if (!drm_device || !drm_device->dev_private)
-		return 0;
-
-	if (drm_device->switch_power_state == DRM_SWITCH_POWER_OFF)
-		return 0;
-
-	drm_kms_helper_poll_disable(drm_device);
-
+	DBG("");
 	return 0;
 }
 
 static int pdev_resume(struct platform_device *device)
 {
-	DBG("%s\n", __func__);
-
-	if (!drm_device || !drm_device->dev_private)
-		return 0;
-
-	if (drm_device->switch_power_state == DRM_SWITCH_POWER_OFF)
-		return 0;
-
-	drm_kms_helper_poll_enable(drm_device);
-
+	DBG("");
 	return 0;
+}
+
+static void pdev_shutdown(struct platform_device *device)
+{
+	DBG("");
 }
 
 static int pdev_probe(struct platform_device *device)
@@ -1037,6 +1024,7 @@ struct platform_driver pdev = {
 		.remove = pdev_remove,
 		.suspend = pdev_suspend,
 		.resume = pdev_resume,
+		.shutdown = pdev_shutdown,
 };
 
 static int __init omap_drm_init(void)
