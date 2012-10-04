@@ -571,8 +571,6 @@ struct omap_dss_device {
 	} phy;
 
 	struct {
-		u16 fck_div;
-
 		struct {
 			struct {
 				u16 lck_div;
