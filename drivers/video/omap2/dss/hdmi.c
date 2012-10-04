@@ -691,6 +691,7 @@ bool omapdss_hdmi_detect(void)
 
 int omapdss_hdmi_display_enable(struct omap_dss_device *dssdev)
 {
+	struct omap_dss_hdmi_data *priv = dssdev->data;
 	int r = 0;
 
 	DSSDBG("ENTER hdmi_display_enable\n");
@@ -702,6 +703,8 @@ int omapdss_hdmi_display_enable(struct omap_dss_device *dssdev)
 		r = -ENODEV;
 		goto err0;
 	}
+
+	hdmi.ip_data.hpd_gpio = priv->hpd_gpio;
 
 	r = omap_dss_start_device(dssdev);
 	if (r) {
@@ -970,12 +973,9 @@ static void __init hdmi_probe_pdata(struct platform_device *pdev)
 
 	for (i = 0; i < pdata->num_devices; ++i) {
 		struct omap_dss_device *dssdev = pdata->devices[i];
-		struct omap_dss_hdmi_data *priv = dssdev->data;
 
 		if (dssdev->type != OMAP_DISPLAY_TYPE_HDMI)
 			continue;
-
-		hdmi.ip_data.hpd_gpio = priv->hpd_gpio;
 
 		r = hdmi_init_display(dssdev);
 		if (r) {
