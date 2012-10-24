@@ -698,8 +698,8 @@ int omap_request_dma(int dev_id, const char *dev_name,
 	for (ch = 0; ch < dma_chan_count; ch++) {
 		if (free_ch == -1 && dma_chan[ch].dev_id == -1) {
 			free_ch = ch;
-			if (dev_id == 0)
-				break;
+			/* Exit after first free channel found */
+			break;
 		}
 	}
 	if (free_ch == -1) {
@@ -891,11 +891,12 @@ void omap_start_dma(int lch)
 		int next_lch, cur_lch;
 		char dma_chan_link_map[MAX_LOGICAL_DMA_CH_COUNT];
 
-		dma_chan_link_map[lch] = 1;
 		/* Set the link register of the first channel */
 		enable_lnk(lch);
 
 		memset(dma_chan_link_map, 0, sizeof(dma_chan_link_map));
+		dma_chan_link_map[lch] = 1;
+
 		cur_lch = dma_chan[lch].next_lch;
 		do {
 			next_lch = dma_chan[cur_lch].next_lch;
@@ -1043,12 +1044,26 @@ EXPORT_SYMBOL(omap_set_dma_callback);
  */
 dma_addr_t omap_get_dma_src_pos(int lch)
 {
+	u32 cdac;
 	dma_addr_t offset = 0;
 
 	if (cpu_is_omap15xx())
 		offset = p->dma_read(CPC, lch);
-	else
-		offset = p->dma_read(CSAC, lch);
+	else {
+		/*
+		 * CDAC != 0 indicates that the DMA transfer on the channel has
+		 * been started already.
+		 * If CDAC == 0, we can not trust the CSAC value since it has
+		 * not been updated, and can contain random number.
+		 * Return the start address in case the DMA has not jet started.
+		 * This is valid since in fact the DMA has not yet progressed.
+		 */
+		cdac = p->dma_read(CDAC, lch);
+		if (likely(cdac))
+			offset = p->dma_read(CSAC, lch);
+		else
+			offset = p->dma_read(CSSA, lch);
+	}
 
 	if (IS_DMA_ERRATA(DMA_ERRATA_3_3) && offset == 0)
 		offset = p->dma_read(CSAC, lch);
