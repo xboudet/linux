@@ -12,3 +12,4 @@ virtio-modules
 nfs-modules
 crypto-modules
 sata-modules
+mouse-modules
