@@ -38,6 +38,7 @@ $(stampdir)/stamp-build-%: target_flavour = $*
 $(stampdir)/stamp-build-%: $(stampdir)/stamp-prepare-%
 	@echo "Building $*..."
 	$(build_cd) $(kmake) $(build_O) $(conc_level) $(build_image) modules
+	$(build_cd) $(kmake) $(build_O) $(conc_level) omap5-panda.dtb
 	@touch $@
 
 # Install the finished build
@@ -74,6 +75,8 @@ endif
 		$(pkgdir)/boot/abi-$(abi_release)-$*
 	install -m600 $(builddir)/build-$*/System.map \
 		$(pkgdir)/boot/System.map-$(abi_release)-$*
+	install -m600 $(builddir)/build-$*/arch/arm/boot/omap5-panda.dtb \
+		$(pkgdir)/boot/omap5-panda.dtb-$(abi_release)-$*
 ifeq ($(no_dumpfile),)
 	makedumpfile -g $(pkgdir)/boot/vmcoreinfo-$(abi_release)-$* \
 		-x $(builddir)/build-$*/vmlinux
