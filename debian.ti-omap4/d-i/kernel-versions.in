@@ -1,4 +1,0 @@
-# arch	version		flavour		installedname			suffix	bdep
-armel	PKGVER-ABINUM	omap4		PKGVER-ABINUM-omap4		-
-
-armhf	PKGVER-ABINUM	omap4		PKGVER-ABINUM-omap4		-

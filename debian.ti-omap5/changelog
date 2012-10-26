@@ -1,4 +1,4 @@
-linux-ti-omap4 (3.7.0-100.1) precise; urgency=low
+linux-ti-omap5 (3.7.0-100.1) precise; urgency=low
 
   [ Xavier Boudet ]
 
@@ -7,7 +7,7 @@ linux-ti-omap4 (3.7.0-100.1) precise; urgency=low
 
  -- Xavier Boudet <x-boudet@ti.com>  Thu, 25 October 2012 19:00:01 +0200
 
-linux-ti-omap4 (3.7.0-100.0) precise; urgency=low
+linux-ti-omap5 (3.7.0-100.0) precise; urgency=low
 
   [ Xavier Boudet ]
 
