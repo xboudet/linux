@@ -1,3 +1,12 @@
+linux-ti-omap4 (3.4.0-1489.11) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1489.11
+  * rework ABI data for LP build
+
+ -- Xavier Boudet <x-boudet@ti.com>  Fri, 16 November 2012 13:21:01 +0100
+
 linux-ti-omap4 (3.4.0-1489.10) precise; urgency=low
 
   [ Xavier Boudet ]
