@@ -1,3 +1,21 @@
+linux-ti-omap5 (3.7.0-101.3) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.7.0-101.3
+  * New Baseline
+
+ -- Xavier Boudet <x-boudet@ti.com>  Tue, 27 November 2012 11:34:01 +0100
+
+linux-ti-omap5 (3.7.0-101.2) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.7.0-101.2
+  * New Baseline
+
+ -- Xavier Boudet <x-boudet@ti.com>  Fri, 23 November 2012 15:19:01 +0100
+
 linux-ti-omap5 (3.7.0-101.1) precise; urgency=low
 
   [ Xavier Boudet ]
