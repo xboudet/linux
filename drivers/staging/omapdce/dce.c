@@ -579,7 +579,8 @@ static int ioctl_codec_create(struct drm_device *dev, void *data,
 
 		strncpy(req.name, arg->name, sizeof(req.name));
 		if (!strcmp(req.name, "ivahd_vc1vdec") ||
-			!strcmp(req.name, "ivahd_mpeg2vdec"))
+			!strcmp(req.name, "ivahd_mpeg2vdec") ||
+			!strcmp(req.name, "ivahd_jpegvdec"))
 			quirks |= DCE_CODEC_QUIRKS_OUTBUFS_MEMTYPE_RAW;
 
 		ret = engine_get(priv, arg->eng_handle, &req.engine);
