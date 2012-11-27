@@ -1,3 +1,12 @@
+linux-ti-omap4 (3.4.0-1489.15) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1489.15
+  * Rebase Linux 3.4.20 on 3.4.0-1489
+
+ -- Xavier Boudet <x-boudet@ti.com>  Tue, 27 November 2012 09:44:01 +0100
+
 linux-ti-omap4 (3.4.0-1489.14) precise; urgency=low
 
   [ Xavier Boudet ]
