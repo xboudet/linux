@@ -1314,6 +1314,30 @@ static void rpmsg_cb(struct rpmsg_channel *rpdev, void *data,
 	rpcomplete(data2, len);
 }
 
+static int dce_resume(struct device *dev)
+{
+	struct dce_rpc_connect_req req = {
+			.hdr = MKHDR(CONNECT),
+			.chipset_id = GET_OMAP_TYPE,
+			.debug = drm_debug ? 1 : 3,
+	};
+	int ret;
+
+	/* send resume msg: */
+	ret = rpsend(NULL, NULL, hdr(&req), sizeof(req));
+	if (ret) {
+		DBG("rpsend failed: %d", ret);
+		return ret;
+	}
+
+	return 0;
+}
+
+static const struct dev_pm_ops dce_pm_ops = {
+	.resume = dce_resume,
+};
+
+
 static struct rpmsg_device_id rpmsg_id_table[] = {
 		{ .name = "rpmsg-dce" },
 		{ },
@@ -1322,6 +1346,7 @@ static struct rpmsg_device_id rpmsg_id_table[] = {
 static struct rpmsg_driver rpmsg_driver = {
 		.drv.name       = KBUILD_MODNAME,
 		.drv.owner      = THIS_MODULE,
+		.drv.pm         = &dce_pm_ops,
 		.id_table       = rpmsg_id_table,
 		.probe          = rpmsg_probe,
 		.callback       = rpmsg_cb,
