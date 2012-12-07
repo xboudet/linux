@@ -1,3 +1,12 @@
+linux-ti-omap4 (3.4.0-1489.17) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1489.17
+  * OFF mode patch
+
+ -- Xavier Boudet <x-boudet@ti.com>  Fri, 07 December 2012 09:14:01 +0100
+
 linux-ti-omap4 (3.4.0-1489.16) precise; urgency=low
 
   [ Xavier Boudet ]
