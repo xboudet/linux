@@ -84,9 +84,6 @@ static int omap_ehci_init(struct usb_hcd *hcd)
 
 	rc = ehci_setup(hcd);
 
-	/* root ports should always stay powered */
-	ehci_port_power(ehci, 1);
-
 	return rc;
 }
 
