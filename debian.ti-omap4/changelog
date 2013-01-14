@@ -1,3 +1,13 @@
+linux-ti-omap4 (3.4.0-1489.20) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1489.20
+  * Rebase Linux 3.4.25 on 3.4.0-1489
+  * Add patch series for 1.5 GHz support
+
+ -- Xavier Boudet <x-boudet@ti.com>  Mon, 14 January 2013 09:52:01 +0100
+
 linux-ti-omap4 (3.4.0-1489.19) precise; urgency=low
 
   [ Xavier Boudet ]
