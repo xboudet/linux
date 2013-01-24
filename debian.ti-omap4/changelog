@@ -1,3 +1,15 @@
+linux-ti-omap4 (3.4.0-1489.23) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1489.23
+  * Add:
+      - OMAPDSS: DISPC: Configure doublestride for NV12 when using 2D Tiler buf
+      - ARM: OMAP4: hwmod data: fix offsets for EMIF2
+      - OMAP4: DSS: Implement workaround for Errata ID:i733.
+
+ -- Xavier Boudet <x-boudet@ti.com>  Thu, 24 January 2013 15:07:01 +0100
+
 linux-ti-omap4 (3.4.0-1489.22) precise; urgency=low
 
   [ Xavier Boudet ]
