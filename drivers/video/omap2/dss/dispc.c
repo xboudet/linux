@@ -1415,6 +1415,7 @@ static void dispc_ovl_set_scaling(enum omap_plane plane,
 }
 
 static void dispc_ovl_set_rotation_attrs(enum omap_plane plane, u8 rotation,
+		enum omap_dss_rotation_type rotation_type,
 		bool mirroring, enum omap_color_mode color_mode)
 {
 	bool row_repeat = false;
@@ -1465,6 +1466,14 @@ static void dispc_ovl_set_rotation_attrs(enum omap_plane plane, u8 rotation,
 	if (dss_has_feature(FEAT_ROWREPEATENABLE))
 		REG_FLD_MOD(DISPC_OVL_ATTRIBUTES(plane),
 			row_repeat ? 1 : 0, 18, 18);
+
+	if (color_mode == OMAP_DSS_COLOR_NV12) {
+		bool doublestride = (rotation_type == OMAP_DSS_ROT_TILER) &&
+					(rotation == OMAP_DSS_ROT_0 ||
+					rotation == OMAP_DSS_ROT_180);
+		/* DOUBLESTRIDE */
+		REG_FLD_MOD(DISPC_OVL_ATTRIBUTES(plane), doublestride, 22, 22);
+	}
 }
 
 static int color_mode_to_bpp(enum omap_color_mode color_mode)
@@ -2238,8 +2247,8 @@ int dispc_ovl_setup(enum omap_plane plane, struct omap_overlay_info *oi,
 		dispc_ovl_set_vid_color_conv(plane, cconv);
 	}
 
-	dispc_ovl_set_rotation_attrs(plane, oi->rotation, oi->mirror,
-			oi->color_mode);
+	dispc_ovl_set_rotation_attrs(plane, oi->rotation, oi->rotation_type,
+			oi->mirror, oi->color_mode);
 
 	dispc_ovl_set_zorder(plane, oi->zorder);
 	dispc_ovl_set_pre_mult_alpha(plane, oi->pre_mult_alpha);
