@@ -1,8 +1,18 @@
+linux-ti-omap4 (3.4.0-1489.24) precise; urgency=low
+
+  [ Xavier Boudet ]
+
+  * UBUNTU: version 3.4.0-1489.24
+  * Rebase Linux 3.4.29 on 3.4.0-1489
+
+ -- Xavier Boudet <x-boudet@ti.com>  Mon, 4 February 2013 15:29:01 +0100
+
 linux-ti-omap4 (3.4.0-1489.23) precise; urgency=low
 
   [ Xavier Boudet ]
 
   * UBUNTU: version 3.4.0-1489.23
+  * Rebase Linux 3.4.28 on 3.4.0-1489
   * Add:
       - OMAPDSS: DISPC: Configure doublestride for NV12 when using 2D Tiler buf
       - ARM: OMAP4: hwmod data: fix offsets for EMIF2
