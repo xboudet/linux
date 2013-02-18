@@ -1,36 +1,22 @@
-linux-ti-omap5 (3.7.0-101.3) precise; urgency=low
+linux-ti-omap5 (3.8.1-100.5) precise; urgency=low
 
-  [ Xavier Boudet ]
+  * UBUNTU: version 3.8.1-100.5
+  * UBUNTU: Update Headers for OMAP5
+  * New Baseline - VINCENT/5432-ES2-5
 
-  * UBUNTU: version 3.7.0-101.3
-  * New Baseline
+ -- Xavier Boudet <x-boudet@ti.com>  Tue, 12 Mar 2013 15:14:33 +0100
 
- -- Xavier Boudet <x-boudet@ti.com>  Tue, 27 November 2012 11:34:01 +0100
+linux-ti-omap5 (3.8.1-100.4) precise; urgency=low
 
-linux-ti-omap5 (3.7.0-101.2) precise; urgency=low
+  * UBUNTU: version 3.8.1-100.4
+  * Internal version 100.[4321]
 
-  [ Xavier Boudet ]
+ -- Xavier Boudet <x-boudet@ti.com>  Tue, 12 Mar 2013 09:02:04 +0100
 
-  * UBUNTU: version 3.7.0-101.2
-  * New Baseline
+linux-ti-omap5 (3.8.1-100.0) precise; urgency=low
 
- -- Xavier Boudet <x-boudet@ti.com>  Fri, 23 November 2012 15:19:01 +0100
+  * UBUNTU: version 3.8.1-100.0
+  * New ABI
 
-linux-ti-omap5 (3.7.0-101.1) precise; urgency=low
-
-  [ Xavier Boudet ]
-
-  * UBUNTU: version 3.7.0-101.1
-  * New Baseline
-
- -- Xavier Boudet <x-boudet@ti.com>  Wed, 14 November 2012 17:26:01 +0100
-
-linux-ti-omap5 (3.7.0-101.0) precise; urgency=low
-
-  [ Xavier Boudet ]
-
-  * UBUNTU: version 3.7.0-101.0
-  * NEW ABI
-
- -- Xavier Boudet <x-boudet@ti.com>  Wed, 14 November 2012 17:26:00 +0100
-
+ -- Xavier Boudet <x-boudet@ti.com>  Wed, 06 Mar 2013 10:07:33 +0100
+ 
