@@ -1,3 +1,10 @@
+linux-ti-omap5 (3.7.0-102.1) precise; urgency=low
+
+  * UBUNTU: version 3.7.0-102.1
+  * New Baseline - VINCENT/5432-76
+
+ -- Xavier Boudet <x-boudet@ti.com>  Mon, 18 Feb 2013 14:32:41 +0100
+
 linux-ti-omap5 (3.7.0-101.3) precise; urgency=low
 
   [ Xavier Boudet ]
