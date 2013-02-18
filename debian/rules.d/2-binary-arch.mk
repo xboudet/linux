@@ -75,7 +75,7 @@ endif
 		$(pkgdir)/boot/abi-$(abi_release)-$*
 	install -m600 $(builddir)/build-$*/System.map \
 		$(pkgdir)/boot/System.map-$(abi_release)-$*
-	install -m600 $(builddir)/build-$*/arch/arm/boot/omap5-panda.dtb \
+	install -m600 $(builddir)/build-$*/arch/arm/boot/dts/omap5-panda.dtb \
 		$(pkgdir)/boot/omap5-panda.dtb-$(abi_release)-$*
 ifeq ($(no_dumpfile),)
 	makedumpfile -g $(pkgdir)/boot/vmcoreinfo-$(abi_release)-$* \
