@@ -1,3 +1,24 @@
+linux-ti-omap5 (3.8.1-100.1) precise; urgency=low
+
+  * UBUNTU: version 3.8.1-100.1
+  * New Baseline - VINCENT/5432-ES2-5
+
+ -- Xavier Boudet <x-boudet@ti.com>  Wed, 06 Mar 2013 10:07:34 +0100
+
+linux-ti-omap5 (3.8.1-100.0) precise; urgency=low
+
+  * UBUNTU: version 3.8.1-100.0
+  * New ABI
+
+ -- Xavier Boudet <x-boudet@ti.com>  Wed, 06 Mar 2013 10:07:33 +0100
+ 
+linux-ti-omap5 (3.7.0-102.1) precise; urgency=low
+
+  * UBUNTU: version 3.7.0-102.1
+  * New Baseline - VINCENT/5432-76
+
+ -- Xavier Boudet <x-boudet@ti.com>  Mon, 18 Feb 2013 14:32:41 +0100
+
 linux-ti-omap5 (3.7.0-101.3) precise; urgency=low
 
   [ Xavier Boudet ]
