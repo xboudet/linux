@@ -44,6 +44,8 @@
 #include <plat/sata.h>
 #endif
 
+#include <linux/export.h>
+
 #define L3_MODULES_MAX_LEN 12
 #define L3_MODULES 3
 
@@ -800,3 +802,9 @@ static int __init omap2_init_devices(void)
 	return 0;
 }
 arch_initcall(omap2_init_devices);
+
+/* Hack! Export some symbols for out-of-tree SGX module :( */
+extern void v7_dma_map_area(void);
+EXPORT_SYMBOL(v7_dma_map_area);
+extern void v7_dma_flush_range(void);
+EXPORT_SYMBOL(v7_dma_flush_range);
