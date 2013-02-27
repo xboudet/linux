@@ -52,7 +52,7 @@ int abe_opp_init_initial_opp(struct omap_abe *abe);
 extern struct snd_pcm_ops omap_aess_pcm_ops;
 extern struct snd_soc_dai_driver omap_abe_dai[6];
 
-static u64 omap_abe_dmamask = DMA_BIT_MASK(32);
+static u64 omap_abe_dmamask = DMA_BIT_MASK(64);
 
 static const char *abe_memory_bank[5] = {
 	"dmem",
