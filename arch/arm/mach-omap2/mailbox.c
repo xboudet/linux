@@ -294,7 +294,7 @@ static struct omap_mbox *omap2_mboxes[] = {
 };
 #endif
 
-#if defined(CONFIG_ARCH_OMAP4) || defined(CONFIG_ARCH_OMAP5)
+#if defined(CONFIG_ARCH_OMAP4) || defined(CONFIG_SOC_OMAP5)
 /* OMAP4 */
 static struct omap_mbox2_priv omap2_mbox_1_priv = {
 	.tx_fifo = {
@@ -370,7 +370,7 @@ static int omap2_mbox_probe(struct platform_device *pdev)
 		list[1]->irq = platform_get_irq_byname(pdev, "iva");
 	}
 #endif
-#if defined(CONFIG_ARCH_OMAP4) || defined(CONFIG_ARCH_OMAP5)
+#if defined(CONFIG_ARCH_OMAP4) || defined(CONFIG_SOC_OMAP5)
 	else if (cpu_is_omap44xx() || soc_is_omap54xx()) {
 		list = omap4_mboxes;
 
