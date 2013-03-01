@@ -37,7 +37,7 @@
 #include "omap-pcm.h"
 #include "omap-hdmi.h"
 
-#define DRV_NAME "omap-hdmi-audio-dai"
+#define DRV_NAME "omap-hdmi-audio"
 
 struct hdmi_priv {
 	struct omap_pcm_dma_data dma_params;
@@ -110,6 +110,8 @@ static int omap_hdmi_dai_hw_params(struct snd_pcm_substream *substream,
 	/*
 	 * fill the IEC-60958 channel status word
 	 */
+	/* initialize the word bytes */
+	memset(iec->status, 0, sizeof(iec->status));
 
 	/* specify IEC-60958-3 (commercial use) */
 	iec->status[0] &= ~IEC958_AES0_PROFESSIONAL;
