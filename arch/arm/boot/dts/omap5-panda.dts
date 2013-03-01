@@ -108,6 +108,48 @@
 		ti,hdmi_audio = <&hdmi>;
 		ti,level_shifter = <&tpd12s015>;
 	};
+
+	/* HS USB Port 2 RESET */
+	hsusb2_reset: hsusb2_reset_reg {
+		compatible = "regulator-fixed";
+		regulator-name = "hsusb2_reset";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio3 16 0>;	/* gpio3_80 HUB_NRESET */
+		startup-delay-us = <70000>;
+		enable-active-high;
+	};
+
+	/* HS USB Host PHY on PORT 2 */
+	hsusb2_phy: hsusb2_phy {
+		compatible = "usb-nop-xceiv";
+		reset-supply = <&hsusb2_reset>;
+	};
+
+	/* HS USB Port 3 RESET */
+	hsusb3_reset: hsusb3_reset_reg {
+		compatible = "regulator-fixed";
+		regulator-name = "hsusb3_reset";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio3 15 0>;	/* gpio3_79 ETH_NRESET */
+		startup-delay-us = <70000>;
+		enable-active-high;
+	};
+
+	/* HS USB Host PHY on PORT 3 */
+	hsusb3_phy: hsusb3_phy {
+		compatible = "usb-nop-xceiv";
+		reset-supply = <&hsusb3_reset>;
+	};
+
+	/* hsusb2_phy is clocked by FREF_CLK1 i.e. auxclk1 */
+	clock_alias {
+		clock-name = "auxclk1_ck";
+		clock-alias = "main_clk";
+		device = <&hsusb2_phy>;
+		clock-frequency = <19200000>; /* 19.2 MHz */
+	};
 };
 
 &mmc1 {
@@ -178,6 +220,7 @@
 			&mcbsp1_pins
 			&mcbsp2_pins
 			&i2c5_pins
+			&usbhost_pins
 			&dss_hdmi_pins
 			&tpd12s015_pins
 	>;
@@ -232,6 +275,19 @@
 		>;
 	};
 
+	usbhost_pins: pinmux_usbhost_pins {
+		pinctrl-single,pins = <
+			0x84 0x100	/* usbb2_hsic_strobe INPUT | MODE 0 */
+			0x86 0x100	/* usbb2_hsic_data INPUT | MODE 0 */
+
+			0x19e 0x100	/* usbb3_hsic_strobe INPUT | MODE 0 */
+			0x1a0 0x100	/* usbb3_hsic_data INPUT | MODE 0 */
+
+			0x70 0x6	/* gpio3_80 OUTPUT | MODE 6 HUB_NRESET */
+			0x6e 0x6	/* gpio3_79 OUTPUT | MODE 6 ETH_NRESET */
+		>;
+	};
+
 	dss_hdmi_pins: pinmux_dss_hdmi_pins {
 		pinctrl-single,pins = <
 			0x0fc 0x118	/* hdmi_cec.hdmi_cec INPUT PULLUP | MODE 0 */
@@ -247,6 +303,19 @@
 	};
 };
 
+&omap5_pmx_wkup {
+	pinctrl-names = "default";
+	pinctrl-0 = <
+			&usbhost_wkup_pins
+	>;
+
+	usbhost_wkup_pins: pinmux_usbhost_wkup_pins {
+		pinctrl-single,pins = <
+			0x1A 0x0	/* fref_clk1_out OUTPUT | MODE 7 for USB hub clk */
+		>;
+	};
+};
+
 &i2c5 {
 	tca6424a: tca6424a@22 {
 		compatible = "ti,tca6424a";
@@ -254,6 +323,15 @@
 		#gpio-cells = <2>;
 		reg = <0x22>;
 	};
+};
+
+&usbhshost {
+	port2-mode = "ehci-hsic";
+	port3-mode = "ehci-hsic";
+};
+
+&usbhsehci {
+	phys = <0 &hsusb2_phy &hsusb3_phy>;
 };
 
 &hdmi {

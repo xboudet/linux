@@ -82,6 +82,7 @@ config SOC_OMAP5
 	select CPU_V7
 	select HAVE_SMP
 	select COMMON_CLK
+	select USB_ARCH_HAS_EHCI if USB_SUPPORT
 
 comment "OMAP Core Type"
 	depends on ARCH_OMAP2
