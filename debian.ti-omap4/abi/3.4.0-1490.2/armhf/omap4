@@ -8517,6 +8517,7 @@ EXPORT_SYMBOL_GPL vmlinux 0x37da61e4	inet_csk_route_child_sock
 EXPORT_SYMBOL_GPL vmlinux 0x37ebc0ba	usb_set_device_state
 EXPORT_SYMBOL_GPL vmlinux 0x3815be9c	usb_put_hcd
 EXPORT_SYMBOL_GPL vmlinux 0x3837ff50	gpio_export_link
+EXPORT_SYMBOL_GPL vmlinux 0x386b341b	pstore_cannot_block_path
 EXPORT_SYMBOL_GPL vmlinux 0x38a9c2c7	input_ff_effect_from_user
 EXPORT_SYMBOL_GPL vmlinux 0x38da89e4	perf_event_refresh
 EXPORT_SYMBOL_GPL vmlinux 0x38e0ea1a	bus_find_device
