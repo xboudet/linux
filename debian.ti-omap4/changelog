@@ -1,3 +1,11 @@
+linux-ti-omap4 (3.4.0-1490.4) precise; urgency=low
+
+  * UBUNTU: version 3.4.0-1490.3
+  * Rebase patches from git.omapzoom.org/kernel/omap.git 
+    branch: p-linux-omap-3.4
+
+ -- Xavier Boudet <x-boudet@ti.com>  Tue, 05 Mar 2013 11:43:02 +0100
+
 linux-ti-omap4 (3.4.0-1490.3) precise; urgency=low
 
   * UBUNTU: version 3.4.0-1490.3
