@@ -44,6 +44,11 @@ ifeq ($(do_flavour_header_package),true)
 	cp -a drivers/media/platform/*.h $(indep_hdrdir)/drivers/media/platform
 	cp -a drivers/media/dvb-frontends/*.h $(indep_hdrdir)/drivers/media/dvb-frontends
 	cp -a drivers/staging/omapdrm/*.h $(indep_hdrdir)/drivers/staging/omapdrm
+	cp -a sound/soc/omap/aess/aess-fw.h $(indep_hdrdir)/sound/soc/omap/aess/.
+	cp -a sound/soc/omap/omap-abe-priv.h $(indep_hdrdir)/sound/soc/omap/.
+	cp -a arch/arm/mach-omap2/omap-pm.h $(indep_hdrdir)/arch/arm/mach-omap2/.
+	cp -a arch/arm/mach-omap2/omap_device.h $(indep_hdrdir)/arch/arm/mach-omap2/.
+	cp -a arch/arm/mach-omap2/omap_hwmod.h $(indep_hdrdir)/arch/arm/mach-omap2/.
 	cp -a scripts include $(indep_hdrdir)
 	(find arch -name include -type d -print | \
 		xargs -n1 -i: find : -type f) | \
