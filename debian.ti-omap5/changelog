@@ -1,3 +1,10 @@
+linux-ti-omap5 (3.8.1-100.2) precise; urgency=low
+
+  * UBUNTU: version 3.8.1-100.2
+  * UBUNTU: add aess-fw.h to linux-headers-<abi>-omap5
+
+ -- Xavier Boudet <x-boudet@ti.com>  Fri, 08 Mar 2013 14:01:08 +0100
+
 linux-ti-omap5 (3.8.1-100.1) precise; urgency=low
 
   * UBUNTU: version 3.8.1-100.1
