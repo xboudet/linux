@@ -253,6 +253,7 @@ endif
 	ln -s ../../drivers/staging/omapdrm/omap_drm.h $(hdrdir)/include/linux/omap_drm.h
 	# Time for OMAP5 dirty temporary hack:
 	ln -s ../../sound/soc/omap/aess/aess-fw.h $(hdrdir)/include/linux/aess-fw.h
+	ln -s ../../sound/soc/omap/omap-abe-priv.h $(hdrdir)/include/linux/omap-abe-priv.h
 
 headers_tmp := $(CURDIR)/debian/tmp-headers
 headers_dir := $(CURDIR)/debian/linux-libc-dev
