@@ -1,3 +1,10 @@
+linux-ti-omap5 (3.8.1-100.3) precise; urgency=low
+
+  * UBUNTU: version 3.8.1-100.3
+  * UBUNTU: add omap-abe-priv.h to linux-headers-<abi>-omap5
+
+ -- Xavier Boudet <x-boudet@ti.com>  Mon, 11 Mar 2013 14:23:18 +0100
+
 linux-ti-omap5 (3.8.1-100.2) precise; urgency=low
 
   * UBUNTU: version 3.8.1-100.2
