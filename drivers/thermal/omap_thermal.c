@@ -48,7 +48,7 @@ static int omap_get_trip_type(struct thermal_zone_device *thermal, int trip,
 				 enum thermal_trip_type *type)
 {
 	if (trip >= 0 && trip < (thermal->trips - 2))
-		*type = THERMAL_TRIP_STATE_ACTIVE;
+		*type = THERMAL_TRIP_ACTIVE;
 	else if (trip == (thermal->trips - 1))
 		*type = THERMAL_TRIP_CRITICAL;
 	else
@@ -177,7 +177,7 @@ struct omap_thermal_zone *omap4_register_thermal(
 	struct thermal_sensor_conf *sensor_conf)
 {
 	int ret = 0, count, tab_size;
-	struct freq_pctg_table *tab_ptr;
+	struct freq_clip_table *tab_ptr;
 	struct omap_thermal_zone *th_zone;
 
 	if (!sensor_conf) {
@@ -199,13 +199,13 @@ struct omap_thermal_zone *omap4_register_thermal(
 		ret = -EINVAL;
 		goto err_unregister;
 	}
-	tab_ptr = (struct freq_pctg_table *)th_zone->sensor_data->freq_tab;
+	tab_ptr = (struct freq_clip_table *)th_zone->sensor_data->freq_tab;
 	tab_size = th_zone->sensor_data->freq_tab_count;
 	/*set the cpu for the thermal clipping if not set*/
 	for (count = 0; count < tab_size; count++) {
 		th_zone->cool_dev[count] = cpufreq_cooling_register(
-			(struct freq_pctg_table *)&(tab_ptr[count]),
-			1, cpumask_of(0));
+			(struct freq_clip_table *)&(tab_ptr[count]),
+			1, cpumask_of(0), THERMAL_TRIP_ACTIVE);
 		if (IS_ERR(th_zone->cool_dev[count])) {
 			pr_err("Failed to register cpufreq cooling device\n");
 			ret = -EINVAL;
