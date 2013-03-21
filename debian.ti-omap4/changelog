@@ -1,7 +1,15 @@
+linux-ti-omap4 (3.4.0-1490.6) precise; urgency=low
+
+  * UBUNTU: version 3.4.0-1490.6
+  * Rebase Linux 3.4.37 on 3.4-stable
+  * Add fix: Thermal: fix build CONFIG_OMAP_THERMAL_INTERFACE=y
+
+ -- Xavier Boudet <x-boudet@ti.com>  Thu, 21 Mar 2013 13:30:25 +0100
+
 linux-ti-omap4 (3.4.0-1490.5) precise; urgency=low
 
   * UBUNTU: version 3.4.0-1490.5
-  * Rebase Linux 3.4.35 on 3.4-stable
+  * Rebase Linux 3.4.36 on 3.4-stable
 
  -- Xavier Boudet <x-boudet@ti.com>  Fri, 15 Mar 2013 15:26:35 +0100
 
