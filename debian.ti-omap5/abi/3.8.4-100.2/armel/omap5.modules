@@ -5,7 +5,6 @@ bluetooth
 bpa10x
 cdrom
 cfg80211
-ecb
 generic_bl
 hci_uart
 mac80211
