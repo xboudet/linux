@@ -1,3 +1,10 @@
+linux-ti-omap5 (3.8.4-100.2) precise; urgency=low
+
+  * UBUNTU: version 3.8.4-100.2
+  * Update config
+
+ -- Xavier Boudet <x-boudet@ti.com>  Wed, 27 Mar 2013 16:38:39 +0100
+
 linux-ti-omap5 (3.8.4-100.1) precise; urgency=low
 
   * UBUNTU: version 3.8.4-100.1
