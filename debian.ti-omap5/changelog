@@ -1,3 +1,10 @@
+linux-ti-omap5 (3.8.1-100.6) precise; urgency=low
+
+  * UBUNTU: version 3.8.1-100.6
+  * UBUNTU: enable CONFIG_DYNAMIC_DEBUG
+
+ -- Xavier Boudet <x-boudet@ti.com>  Wed, 27 Mar 2013 12:00:05 +0100
+
 linux-ti-omap5 (3.8.1-100.5) precise; urgency=low
 
   * UBUNTU: version 3.8.1-100.5
