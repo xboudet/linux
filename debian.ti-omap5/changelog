@@ -1,3 +1,10 @@
+linux-ti-omap5 (3.8.4-100.1) precise; urgency=low
+
+  * UBUNTU: version 3.8.4-100.1
+  * Rebase on Linux 3.8.4
+
+ -- Xavier Boudet <x-boudet@ti.com>  Wed, 27 Mar 2013 12:27:28 +0100
+
 linux-ti-omap5 (3.8.1-100.6) precise; urgency=low
 
   * UBUNTU: version 3.8.1-100.6
