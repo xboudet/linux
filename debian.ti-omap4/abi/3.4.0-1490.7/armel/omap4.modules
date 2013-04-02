@@ -2053,6 +2053,7 @@ xt_DSCP
 xt_HL
 xt_IDLETIMER
 xt_LED
+xt_LOG
 xt_NFLOG
 xt_NFQUEUE
 xt_NOTRACK

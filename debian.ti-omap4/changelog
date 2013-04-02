@@ -1,3 +1,10 @@
+linux-ti-omap4 (3.4.0-1490.8) precise; urgency=low
+
+  * UBUNTU: version 3.4.0-1490.8
+  * Config enable CONFIG_NETFILTER_XT_TARGET_LOG
+
+ -- Xavier Boudet <x-boudet@ti.com>  Tue, 02 Apr 2013 16:02:23 +0200
+
 linux-ti-omap4 (3.4.0-1490.7) precise; urgency=low
 
   * UBUNTU: version 3.4.0-1490.7
