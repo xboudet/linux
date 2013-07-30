@@ -5499,6 +5499,7 @@ EXPORT_SYMBOL vmlinux 0xd6c51eef	journal_flush
 EXPORT_SYMBOL vmlinux 0xd6d8ec8e	loop_register_transfer
 EXPORT_SYMBOL vmlinux 0xd6da9e96	dsi_vc_dcs_write
 EXPORT_SYMBOL vmlinux 0xd6ee688f	vmalloc
+EXPORT_SYMBOL vmlinux 0xd6ef91ca	udp_push_pending_frames
 EXPORT_SYMBOL vmlinux 0xd712cb6e	idr_get_next
 EXPORT_SYMBOL vmlinux 0xd75c79df	smp_call_function
 EXPORT_SYMBOL vmlinux 0xd7731981	tcf_hash_create
