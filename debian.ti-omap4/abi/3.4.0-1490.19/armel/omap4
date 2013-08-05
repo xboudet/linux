@@ -7327,6 +7327,7 @@ EXPORT_SYMBOL_GPL drivers/virtio/virtio 0x850b1270	unregister_virtio_driver
 EXPORT_SYMBOL_GPL drivers/virtio/virtio 0xc92732b1	unregister_virtio_device
 EXPORT_SYMBOL_GPL drivers/virtio/virtio 0xd4d4905b	register_virtio_driver
 EXPORT_SYMBOL_GPL drivers/virtio/virtio 0xdc9ca7b5	virtio_check_driver_offered_feature
+EXPORT_SYMBOL_GPL drivers/virtio/virtio_ring 0x110ad25e	virtqueue_poll
 EXPORT_SYMBOL_GPL drivers/virtio/virtio_ring 0x1a664498	vring_new_virtqueue
 EXPORT_SYMBOL_GPL drivers/virtio/virtio_ring 0x35819285	virtqueue_detach_unused_buf
 EXPORT_SYMBOL_GPL drivers/virtio/virtio_ring 0x42011ab7	virtqueue_add_buf
@@ -7335,6 +7336,7 @@ EXPORT_SYMBOL_GPL drivers/virtio/virtio_ring 0x61b1759b	virtqueue_notify
 EXPORT_SYMBOL_GPL drivers/virtio/virtio_ring 0x6b01fc21	virtqueue_disable_cb
 EXPORT_SYMBOL_GPL drivers/virtio/virtio_ring 0x70555103	virtqueue_enable_cb_delayed
 EXPORT_SYMBOL_GPL drivers/virtio/virtio_ring 0x8cf79ca2	vring_del_virtqueue
+EXPORT_SYMBOL_GPL drivers/virtio/virtio_ring 0x8d44cf32	virtqueue_enable_cb_prepare
 EXPORT_SYMBOL_GPL drivers/virtio/virtio_ring 0xce01d0b0	virtqueue_get_vring_size
 EXPORT_SYMBOL_GPL drivers/virtio/virtio_ring 0xda0e751e	virtqueue_kick
 EXPORT_SYMBOL_GPL drivers/virtio/virtio_ring 0xeb945342	vring_transport_features
