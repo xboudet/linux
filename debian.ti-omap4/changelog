@@ -1,3 +1,10 @@
+linux-ti-omap4 (3.4.0-1490.24) precise; urgency=low
+
+  * UBUNTU: version 3.4.0-1490.24
+  * Rebase Linux 3.4.60 on 3.4-stable
+
+ -- Xavier Boudet <x-boudet@ti.com>  Tue, 03 Sep 2013 08:43:53 +0200
+
 linux-ti-omap4 (3.4.0-1490.23) precise; urgency=low
 
   * UBUNTU: version 3.4.0-1490.23
